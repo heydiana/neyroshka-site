@@ -541,7 +541,7 @@ const closeModal=()=>{
 
 // веер (fan-deck)
 const deck=root.querySelector('.fan-deck');
-const cards=[...deck.querySelectorAll('.card')];
+const cards=deck?[...deck.querySelectorAll('.card')]:[];
 const resultPhotos=["images/ai-photo/result/c31164b0-81f3-42ac-8de9-b639ea5baf82.png","images/ai-photo/result/325dd2bf-885d-445a-88d5-8321314afc06.png","images/ai-photo/result/6c0ce960-033d-47a2-ada8-1a730858d528.png","images/ai-photo/result/f00bdb86-a459-4370-89db-e10119255be1.png","images/ai-photo/result/bec5e3fd-6d89-4197-970e-e4ba0bbaad08.png"];
 const sourcePhotos=window.__sourcePhotos||["https://static.tildacdn.ink/tild3262-3836-4339-a365-653264343338/photo_2026-04-27_00-.jpg","https://static.tildacdn.ink/tild6636-6262-4737-b063-653336393830/photo_2026-04-27_00-.jpg","https://static.tildacdn.ink/tild6462-6363-4235-a632-646632366666/photo_2026-04-27_00-.jpg"];
 const resultLabels=["ЛЕТНЯЯ СЕРИЯ — 01","ЛЕТНЯЯ СЕРИЯ — 02","ЛЕТНЯЯ СЕРИЯ — 03","ЛЕТНЯЯ СЕРИЯ — 04","ЛЕТНЯЯ СЕРИЯ — 05"];
@@ -563,11 +563,11 @@ const renderDeck=()=>{
    const image=card.querySelector('img');image.src=url;image.alt=labels[dataIndex];
    card.querySelector('.label').textContent=labels[dataIndex];
  });
- caption.textContent=mode==='result'?'финальные ретушь-кадры фотосета — 5 лучших дублей из отснятой серии':'исходники фотосессии — 3 кадра до финального отбора и ретуши';
+ if(caption)caption.textContent=mode==='result'?'финальные ретушь-кадры фотосета — 5 лучших дублей из отснятой серии':'исходники фотосессии — 3 кадра до финального отбора и ретуши';
  resetDeck();
 };
 resets.push(resetDeck);
-deck.addEventListener('click',e=>{
+if(deck)deck.addEventListener('click',e=>{
  e.stopPropagation();const card=e.target.closest('.card');if(!card||card.hidden)return;
  if(activeCard===card){
    const visible=cards.filter(c=>!c.hidden);
@@ -581,7 +581,7 @@ deck.addEventListener('click',e=>{
 root.querySelectorAll('[data-mode]').forEach(btn=>btn.addEventListener('click',()=>{
  mode=btn.dataset.mode;root.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b===btn));renderDeck();
 }));
-renderDeck();
+if(deck)renderDeck();
 
 // горизонтальные ленты (rail) — та же механика, что у веера
 root.querySelectorAll('.rail').forEach(rail=>{
