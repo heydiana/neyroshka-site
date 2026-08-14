@@ -323,6 +323,15 @@ body.nw-modal-open{overflow:hidden}
 
 /* photoset: keep faces visible in the collage */
 #nw #s01 .photoset-collage .tile img{object-position:50% 18%!important}
+
+/* PHOTOSHOOT collage: show full photos, no overlay or numbers */
+#nw #s01 .photoset-collage{grid-template-rows:repeat(2,250px)!important}
+#nw #s01 .photoset-collage .tile{background:#05070b!important}
+#nw #s01 .photoset-collage .tile img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;transform:none!important}
+#nw #s01 .photoset-collage .tile:hover img{transform:none!important}
+#nw #s01 .photoset-collage .tile:after{display:none!important;content:none!important}
+#nw #s01 .photoset-collage .tile .label{display:none!important}
+@media(max-width:760px){#nw #s01 .photoset-collage{grid-template-rows:repeat(3,230px)!important}}
 </style> <script>
 window.__sourcePhotos=['images/ai-photo/source/photo_2026-04-27_00-14-44.jpg','images/ai-photo/source/photo_2026-04-27_00-14-39.jpg','images/ai-photo/source/photo_2026-04-27_00-14-24.jpg'];
 window.__sourcePhotos.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=u;document.head.appendChild(l)});
