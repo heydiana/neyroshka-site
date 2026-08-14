@@ -1,0 +1,278 @@
+name: Organize portfolio media
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  organize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Organize images and update HTML
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+
+          groups = {
+              'images/home': [
+                  '0 (1).png','0 (2).png','0 (3).png','0 (4).png','5.png','6.png'
+              ],
+              'images/process': [
+                  '1.png','2.png','3.png','4.png',
+                  'c8795463-3ed2-4e4d-9515-3049c990f063.png',
+                  'c630e0ae-b8d7-4699-a0d4-2680efd613e5.png',
+                  'c01e494b-8512-4afe-aa16-c7ff5365767f.png',
+                  '93e06fc1-d45c-4a4c-a300-33a7e88336c7.png',
+                  '60790a5f-4c34-44ab-8d42-92c6f6c81a38.png',
+                  '50223d9c-e996-4abb-9e9d-9cec32e7cd36.png',
+                  '3591de85-883c-45a0-8c26-ddfc9e02c674.png',
+                  '1be4dfad-054d-4948-9828-9b01db6b048d.png',
+                  '12467987-72c7-4111-990e-459f10f8fa48.png',
+                  '0aa80b2a-4a1a-4d94-aa80-8d5bf0ae5d23.png',
+                  '01681717-17d6-4c4e-a181-cb227d98c402.png'
+              ],
+              'images/ai-photo/result': [
+                  'f00bdb86-a459-4370-89db-e10119255be1.png',
+                  'c31164b0-81f3-42ac-8de9-b639ea5baf82.png',
+                  'bec5e3fd-6d89-4197-970e-e4ba0bbaad08.png',
+                  '6c0ce960-033d-47a2-ada8-1a730858d528.png',
+                  '325dd2bf-885d-445a-88d5-8321314afc06.png'
+              ],
+              'images/ai-photo/source': [
+                  'photo_2026-04-27_00-14-44.jpg',
+                  'photo_2026-04-27_00-14-39.jpg',
+                  'photo_2026-04-27_00-14-24.jpg'
+              ],
+              'images/ai-photo/photoset': [
+                  'vidu-image-3333466221066792.png',
+                  'vidu-image-3333474384618348.png',
+                  'vidu-image-3333477049444384.png',
+                  'vidu-image-3333479222572912.png',
+                  'vidu-image-3333483580139500.png',
+                  'vidu-image-3333505129175030.png'
+              ],
+              'images/ai-photo/story': [
+                  '00fdee42-ed72-4de6-a372-fc033c72818c.png',
+                  'vidu-image-3334229684806154.png',
+                  'd80e2ff3-4467-4641-9a0a-3365a5fa0f9a.png',
+                  'd58f2289-ec8c-4516-bae4-654d8e76ba24.png',
+                  'be8e82af-a85c-4b94-8a86-21d36091fe20.png',
+                  'b98783af-203e-45a2-a49c-64dd21e7a30a.png',
+                  '8f02097e-a957-4bb7-bb22-f31449b43906.png',
+                  '4897b8c3-08e8-43ed-b825-f53ac4244c6c.png',
+                  '32bacb01-27fe-4543-8360-545e694d1575.png',
+                  '319c9fca-332f-411e-9938-3c06a1c1be4b.png',
+                  '2a786c5b-218e-412a-b3cb-3f6a5f948773.png'
+              ],
+              'images/product': [
+                  'f1aea989-48ec-41a1-a02e-2e46b16f077a.png',
+                  'd95160ad-9255-493a-905d-5642faaf9793.png',
+                  'c1ae1410-9d1b-4f85-84d2-fedde41a9d40.png',
+                  'abfab490-7bbe-499b-98d8-98327a49da68.png',
+                  '6f8e64f5-882b-4b13-8fbc-925eacf5ebcd.png',
+                  '6d7b2b16-415d-494d-8b42-c420ce2700d7.png',
+                  '6726becf-72fd-481d-a9f4-138c35349266.png',
+                  '647c123d-ff18-4c7d-992a-e2e85f1e8327.png',
+                  '53dc9f01-2d92-4d4f-848b-bccb95135d54.png',
+                  '38d7417f-3925-4e61-9256-6d6fbcb84283.png',
+                  '203fd9c2-e5d2-4d2d-99bd-3121b1c21798.png'
+              ],
+              'images/cards': [
+                  '1d60bca6-ca19-43e8-8c4f-3560e1efb6c6.png',
+                  'de264999-bce7-46ff-bb92-417e4d2105a0.png',
+                  'cedfaffe-a587-4fee-bec7-33aa346ae7b9.png',
+                  'bee246fe-6d58-44ad-b9c6-292d83719e71.png',
+                  '692b9b56-2a59-4874-a55f-46ffae467cfa.png',
+                  '49a27de4-ef72-4db4-861b-e642578c4dcb.png',
+                  '4560090f-e9c3-4da6-a3cc-2e21c326d2b1.png',
+                  '2bf172ba-5886-4691-9c72-ad7cfd64d7fb.png'
+              ],
+              'images/education': [
+                  'ff112258-4d02-4174-a6c9-66b5efd31c03.png',
+                  'f5e41652-9e29-4b78-945e-71d5cff88bfd.png',
+                  'fbf166bc-4960-4f51-9f33-b9cfe7b3eed8.png',
+                  'eb4185b6-95bb-4451-93a3-c48a87f6a42c.png',
+                  'c187f5a2-629e-403b-b472-c5acc8d553f4.png',
+                  'afd4239f-4918-4f5d-90ab-34022f92092e.png',
+                  '97dcbbdb-3fad-4c10-9d9d-06d2289afa8a.png',
+                  '84be6437-9bd3-4b40-ba95-7e68eb8577b2.png',
+                  '7e1b64f0-4567-4821-9d1c-c40a70e6d375.png',
+                  '7350a43d-f148-4338-8cef-e815aadabaf8.png',
+                  '703de8d3-70a6-4a3c-ade3-daa14d014348.png',
+                  '602052e6-05d3-4856-92e6-a2c1452d8ee0.png',
+                  '4f62945f-3474-4e47-854e-0dc8f2e622aa.png'
+              ],
+          }
+
+          for folder, files in groups.items():
+              dest_dir = root / folder
+              dest_dir.mkdir(parents=True, exist_ok=True)
+              for name in files:
+                  src = root / name
+                  dst = dest_dir / name
+                  if src.exists() and not dst.exists():
+                      src.replace(dst)
+
+          def set_img_srcs(block, paths, limit=None):
+              it = iter(paths)
+              count = 0
+              def repl(m):
+                  nonlocal count
+                  try:
+                      p = next(it)
+                  except StopIteration:
+                      return m.group(0)
+                  count += 1
+                  return m.group(1) + p + m.group(3)
+              maxn = 0 if limit is None else limit
+              return re.sub(r'(<img\b[^>]*?\bsrc=["\'])([^"\']+)(["\'])', repl, block, count=maxn)
+
+          # MAIN PAGE: six approved category covers.
+          index = Path('index.html').read_text(encoding='utf-8')
+          home_map = {
+              's01':'images/home/0 (1).png',
+              's02':'images/home/0 (2).png',
+              's03':'images/home/0 (3).png',
+              's04':'images/home/0 (4).png',
+              's05':'images/home/5.png',
+              's06':'images/home/6.png',
+          }
+          for sid, path in home_map.items():
+              pat = rf'(<a\b[^>]*href=["\']works\.html#{sid}["\'][^>]*>.*?<img\b[^>]*?src=["\'])([^"\']+)(["\'])'
+              index, n = re.subn(pat, lambda m: m.group(1)+path+m.group(3), index, count=1, flags=re.S)
+              if n != 1:
+                  raise RuntimeError(f'Could not update main cover {sid}')
+          Path('index.html').write_text(index, encoding='utf-8')
+
+          works = Path('works.html').read_text(encoding='utf-8')
+
+          # PROCESS: four step covers.
+          p0 = works.index('<section class="section ny-process" id="process">')
+          p1 = works.index('</section>', p0) + len('</section>')
+          process_block = works[p0:p1]
+          process_block = set_img_srcs(process_block, [f'images/process/{i}.png' for i in range(1,5)], limit=4)
+          works = works[:p0] + process_block + works[p1:]
+
+          # PROCESS gallery array. The third cover is also the first gallery frame, matching the supplied order.
+          process_gallery = [
+              'images/process/3.png',
+              'images/process/c8795463-3ed2-4e4d-9515-3049c990f063.png',
+              'images/process/c630e0ae-b8d7-4699-a0d4-2680efd613e5.png',
+              'images/process/c01e494b-8512-4afe-aa16-c7ff5365767f.png',
+              'images/process/93e06fc1-d45c-4a4c-a300-33a7e88336c7.png',
+              'images/process/60790a5f-4c34-44ab-8d42-92c6f6c81a38.png',
+              'images/process/50223d9c-e996-4abb-9e9d-9cec32e7cd36.png',
+              'images/process/3591de85-883c-45a0-8c26-ddfc9e02c674.png',
+              'images/process/1be4dfad-054d-4948-9828-9b01db6b048d.png',
+              'images/process/12467987-72c7-4111-990e-459f10f8fa48.png',
+              'images/process/0aa80b2a-4a1a-4d94-aa80-8d5bf0ae5d23.png',
+              'images/process/01681717-17d6-4c4e-a181-cb227d98c402.png',
+          ]
+          arr = 'const photos=[' + ','.join(repr(x) for x in process_gallery) + ']'
+          works, n = re.subn(r'const photos=\[[^\]]*\]', arr, works, count=1)
+          if n != 1:
+              raise RuntimeError('Could not update process gallery')
+
+          # Source photos array.
+          source = [
+              'images/ai-photo/source/photo_2026-04-27_00-14-44.jpg',
+              'images/ai-photo/source/photo_2026-04-27_00-14-39.jpg',
+              'images/ai-photo/source/photo_2026-04-27_00-14-24.jpg',
+          ]
+          source_js = 'window.__sourcePhotos=[' + ','.join(repr(x) for x in source) + ']'
+          works, n = re.subn(r'window\.__sourcePhotos=\[[^\]]*\]', source_js, works, count=1)
+          if n != 1:
+              raise RuntimeError('Could not update source photos')
+
+          def section_bounds(text, sid, next_sid=None):
+              start = text.index(f'id="{sid}"')
+              start = text.rfind('<section', 0, start)
+              if next_sid:
+                  marker = text.index(f'id="{next_sid}"', start+1)
+                  end = text.rfind('<section', start+1, marker+1)
+                  if end <= start:
+                      end = marker
+              else:
+                  end = len(text)
+              return start, end
+
+          # s01 result cards: first five images in fan deck.
+          s1a, s1b = section_bounds(works, 's01', 's02')
+          s1 = works[s1a:s1b]
+          result_paths = [f'images/ai-photo/result/{n}' for n in groups['images/ai-photo/result']]
+          deck_start = s1.index('<div class="fan-deck">')
+          deck_end = s1.index('</div>', deck_start) + len('</div>')
+          deck = s1[deck_start:deck_end]
+          deck = set_img_srcs(deck, result_paths, limit=5)
+          s1 = s1[:deck_start] + deck + s1[deck_end:]
+
+          photoset_paths = [f'images/ai-photo/photoset/{n}' for n in groups['images/ai-photo/photoset']]
+          marker = s1.index('ФОТОСЕТ В ЕДИНОМ СТИЛЕ')
+          rail_start = s1.index('<div class="rail rail-blue">', marker)
+          rail_end = s1.index('</div>', rail_start) + len('</div>')
+          rail = set_img_srcs(s1[rail_start:rail_end], photoset_paths, limit=6)
+          s1 = s1[:rail_start] + rail + s1[rail_end:]
+
+          story_paths = [f'images/ai-photo/story/{n}' for n in groups['images/ai-photo/story']]
+          marker = s1.index('ВЫБЕРИ СВОЙ СЮЖЕТ')
+          rail_start = s1.index('<div class="rail rail-blue">', marker)
+          rail_end = s1.index('</div>', rail_start) + len('</div>')
+          rail = set_img_srcs(s1[rail_start:rail_end], story_paths, limit=11)
+          s1 = s1[:rail_start] + rail + s1[rail_end:]
+          works = works[:s1a] + s1 + works[s1b:]
+
+          # s02 product: first 11 images after section start.
+          s2a, s2b = section_bounds(works, 's02', 's04')
+          s2 = works[s2a:s2b]
+          product_paths = [f'images/product/{n}' for n in groups['images/product']]
+          marker = s2.index('ФОТОСЕССИЯ ТОВАРА')
+          rail_start = s2.index('<div class="rail rail-blue">', marker)
+          rail_end = s2.index('</div>', rail_start) + len('</div>')
+          rail = set_img_srcs(s2[rail_start:rail_end], product_paths, limit=11)
+          s2 = s2[:rail_start] + rail + s2[rail_end:]
+
+          # s03 cards are a subblock inside s02 section.
+          marker = s2.index('03 / CARDS')
+          rail_start = s2.index('<div class="rail rail-blue">', marker)
+          rail_end = s2.index('</div>', rail_start) + len('</div>')
+          card_paths = [f'images/cards/{n}' for n in groups['images/cards']]
+          rail = set_img_srcs(s2[rail_start:rail_end], card_paths, limit=8)
+          s2 = s2[:rail_start] + rail + s2[rail_end:]
+          works = works[:s2a] + s2 + works[s2b:]
+
+          # s05 education: first 13 images in its main rail.
+          s5a, s5b = section_bounds(works, 's05', 's06')
+          s5 = works[s5a:s5b]
+          edu_paths = [f'images/education/{n}' for n in groups['images/education']]
+          rail_start = s5.index('<div class="rail rail-blue">')
+          rail_end = s5.index('</div>', rail_start) + len('</div>')
+          rail = set_img_srcs(s5[rail_start:rail_end], edu_paths, limit=13)
+          s5 = s5[:rail_start] + rail + s5[rail_end:]
+          works = works[:s5a] + s5 + works[s5b:]
+
+          Path('works.html').write_text(works, encoding='utf-8')
+
+      - name: Commit organized media
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Organize portfolio media and update image paths"
+          git push
