@@ -1,0 +1,55 @@
+name: Apply exact AI photo replacements
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/exact-ai-photo-replacements.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Replace exact URLs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+            'https://static.tildacdn.ink/tild6131-3766-4764-a435-373266366165/b98783af-203e-45a2-a.png': 'images/ai-photo/story/b98783af-203e-45a2-a49c-64dd21e7a30a.png',
+            'https://static.tildacdn.ink/tild6264-6537-4133-b062-643839316664/photo_2026-06-29_10-.jpg': 'images/ai-photo/result/6c0ce960-033d-47a2-ada8-1a730858d528.png',
+            'https://static.tildacdn.ink/tild3836-3463-4535-b630-373562396132/photo_2026-06-29_10-.jpg': 'images/ai-photo/result/f00bdb86-a459-4370-89db-e10119255be1.png',
+            'https://static.tildacdn.ink/tild6162-3563-4534-b962-386338386363/photo_2026-06-29_10-.jpg': 'images/ai-photo/result/c31164b0-81f3-42ac-8de9-b639ea5baf82.png',
+            'https://static.tildacdn.ink/tild3365-3634-4131-b930-643230303132/photo_2026-06-29_10-.jpg': 'images/ai-photo/result/bec5e3fd-6d89-4197-970e-e4ba0bbaad08.png',
+            'https://static.tildacdn.ink/tild3339-6561-4139-b864-616363326131/photo_2026-05-11_12-.jpg': 'images/ai-photo/result/325dd2bf-885d-445a-88d5-8321314afc06.png',
+          }
+
+          total = 0
+          for filename in ('index.html', 'works.html'):
+              p = Path(filename)
+              text = p.read_text(encoding='utf-8')
+              before = text
+              for old, new in replacements.items():
+                  count = text.count(old)
+                  if count:
+                      text = text.replace(old, new)
+                      total += count
+                      print(f'{filename}: {old} -> {new} ({count})')
+              if text != before:
+                  p.write_text(text, encoding='utf-8')
+          print('TOTAL=', total)
+          PY
+      - name: Commit exact replacements and remove workflow
+        run: |
+          rm .github/workflows/exact-ai-photo-replacements.yml
+          git config user.name "heydiana"
+          git config user.email "70851747+heydiana@users.noreply.github.com"
+          git add index.html works.html .github/workflows/exact-ai-photo-replacements.yml
+          git commit -m "Replace exact AI photo Tilda URLs"
+          git push
