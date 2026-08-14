@@ -1,0 +1,32 @@
+name: Resize photoset without cropping
+on:
+  push:
+    paths:
+      - '.github/workflows/resize-photoset-without-cropping.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scale collage instead of cropping
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('works.html')
+          s = p.read_text(encoding='utf-8')
+          old = "#nw #s01 .photoset-collage{display:grid!important;grid-template-columns:1.12fr 1.28fr 1.28fr!important;grid-template-rows:260px 260px!important;gap:10px!important;overflow:visible!important;padding:4px 0!important;background:transparent!important}"
+          new = "#nw #s01 .photoset-collage{display:grid!important;grid-template-columns:1.12fr 1.28fr 1.28fr!important;grid-template-rows:310px 310px!important;gap:10px!important;overflow:visible!important;padding:4px 0!important;background:transparent!important;transform:scale(.86)!important;transform-origin:top center!important;margin-bottom:-88px!important}"
+          if old not in s:
+              raise SystemExit('target CSS not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add works.html
+          git commit -m 'Scale photoset collage without cropping'
+          git push
