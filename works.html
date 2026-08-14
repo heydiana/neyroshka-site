@@ -868,27 +868,36 @@ document.addEventListener('DOMContentLoaded',function(){
 <script id="preserve-scroll-on-reload">
 (function(){
   var key='neyroshka:works:scrollY';
-  var savedHash=location.hash;
   try{history.scrollRestoration='manual';}catch(e){}
-  if(savedHash){
-    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+  function pos(){return window.scrollY||window.pageYOffset||0}
+  function jump(y){
+    try{window.scrollTo({top:y,left:0,behavior:'auto'});}catch(e){window.scrollTo(0,y);}
   }
-  function save(){
-    try{sessionStorage.setItem(key,String(window.scrollY||window.pageYOffset||0));}catch(e){}
+  function save(){try{sessionStorage.setItem(key,String(pos()));}catch(e){}}
+  function hashTarget(){
+    var h=location.hash;
+    if(!h||h.length<2)return null;
+    try{return document.querySelector(h);}catch(e){return null}
+  }
+  function goToHash(){
+    var el=hashTarget();
+    if(!el)return false;
+    var go=function(){jump(el.getBoundingClientRect().top+pos()-20)};
+    go();
+    requestAnimationFrame(go);
+    setTimeout(go,160);
+    setTimeout(go,450);
+    return true;
   }
   function restore(){
+    if(goToHash())return;
     try{
       var y=sessionStorage.getItem(key);
       if(y===null)return;
       var target=parseFloat(y)||0;
-      window.scrollTo(0,target);
-      requestAnimationFrame(function(){window.scrollTo(0,target);});
-      setTimeout(function(){
-        window.scrollTo(0,target);
-        if(savedHash){
-          try{history.replaceState(null,'',location.pathname+location.search+savedHash);}catch(e){}
-        }
-      },120);
+      jump(target);
+      requestAnimationFrame(function(){jump(target)});
+      setTimeout(function(){jump(target)},120);
     }catch(e){}
   }
   window.addEventListener('pagehide',save);
