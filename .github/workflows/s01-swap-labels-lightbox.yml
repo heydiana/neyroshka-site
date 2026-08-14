@@ -1,0 +1,45 @@
+name: Update s01 labels swap and lightbox
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/s01-swap-labels-lightbox.yml']
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update only s01 collage behavior
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('works.html')
+          s=p.read_text(encoding='utf-8')
+
+          # Swap only the two marked result photos: current positions 2 and 5.
+          a='''<button class="s01-card" type="button"><img src="images/ai-photo/result/c31164b0-81f3-42ac-8de9-b639ea5baf82.png" alt="Результат 02"></button>'''
+          b='''<button class="s01-card" type="button"><img src="images/ai-photo/result/325dd2bf-885d-445a-88d5-8321314afc06.png" alt="Результат 05"></button>'''
+          marker='__S01_SWAP__'
+          if a not in s or b not in s:
+              raise SystemExit('Marked result cards not found')
+          s=s.replace(a,marker,1).replace(b,a,1).replace(marker,b,1)
+
+          css='''\n/* s01 labels + click lightbox; collage geometry unchanged */\n#nw #s01 .s01-split{margin-top:54px}\n#nw #s01 .s01-collage{position:relative}\n#nw #s01 .s01-result::before,#nw #s01 .s01-source::before{position:absolute;left:0;top:-30px;font:500 12px 'DM Mono',monospace;letter-spacing:.1em;color:var(--blue);z-index:3}\n#nw #s01 .s01-result::before{content:'РЕЗУЛЬТАТ'}\n#nw #s01 .s01-source::before{content:'ИСХОДНИК'}\n#s01-lightbox{position:fixed;inset:0;z-index:99999;background:rgba(5,7,11,.94);display:none;align-items:center;justify-content:center;padding:28px}\n#s01-lightbox.open{display:flex}\n#s01-lightbox img{display:block;max-width:94vw;max-height:92vh;width:auto;height:auto;object-fit:contain;border:1px solid rgba(157,188,224,.34)}\n'''
+          if '/* s01 labels + click lightbox; collage geometry unchanged */' not in s:
+              s=s.replace('</style>',css+'</style>',1)
+
+          js='''\n<script id="s01-lightbox-script">\ndocument.addEventListener('DOMContentLoaded',function(){\n  var box=document.createElement('div');\n  box.id='s01-lightbox';\n  box.setAttribute('aria-hidden','true');\n  box.innerHTML='<img alt="">';\n  document.body.appendChild(box);\n  var full=box.querySelector('img');\n  document.querySelectorAll('#s01 .s01-card img').forEach(function(img){\n    img.parentElement.addEventListener('click',function(e){\n      e.preventDefault();\n      full.src=img.src;\n      full.alt=img.alt||'';\n      box.classList.add('open');\n      box.setAttribute('aria-hidden','false');\n    });\n  });\n  document.addEventListener('keydown',function(e){\n    if(e.key==='Tab' && box.classList.contains('open')){\n      e.preventDefault();\n      box.classList.remove('open');\n      box.setAttribute('aria-hidden','true');\n      full.removeAttribute('src');\n    }\n  });\n});\n</script>\n'''
+          if 'id="s01-lightbox-script"' not in s:
+              s=s.replace('</body>',js+'</body>',1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          rm .github/workflows/s01-swap-labels-lightbox.yml
+          git config user.name "heydiana"
+          git config user.email "70851747+heydiana@users.noreply.github.com"
+          git add works.html .github/workflows/s01-swap-labels-lightbox.yml
+          git commit -m "Swap marked photos and add s01 labels lightbox"
+          git push
