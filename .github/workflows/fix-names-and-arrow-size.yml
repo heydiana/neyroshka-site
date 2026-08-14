@@ -1,0 +1,63 @@
+name: Fix portfolio names and category arrow size
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-names-and-arrow-size.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply exact requested changes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          replacements = {
+              'ТВОЯ<br>ЭРА': 'AI-фотосессии',
+              'ТОВАР<br>В КАДРЕ': 'Фото товара',
+              'ПЕРВЫЙ<br>ЭКРАН': 'Карточки товара',
+              'ДВИЖЕНИЕ<br>В КАДРЕ': 'AI-видео',
+              'ЗНАНИЯ<br>В КАДРЕ': 'Учебные материалы',
+              'ТВОИ<br>СТИКЕРЫ': 'Стикеры',
+              'ТВОЯ ЭРА': 'AI-фотосессии',
+              'ТОВАР В КАДРЕ': 'Фото товара',
+              'ПЕРВЫЙ ЭКРАН': 'Карточки товара',
+              'ДВИЖЕНИЕ В КАДРЕ': 'AI-видео',
+              'ЗНАНИЯ В КАДРЕ': 'Учебные материалы',
+              'ТВОИ СТИКЕРЫ': 'Стикеры',
+          }
+
+          for filename in ('index.html', 'works.html'):
+              p = Path(filename)
+              text = p.read_text(encoding='utf-8')
+              for old, new in replacements.items():
+                  text = text.replace(old, new)
+
+              if filename == 'index.html':
+                  # Keep the original small category-arrow styling; change only its direction to ↘.
+                  pattern = r'#ny \.ny-works-grid--categories \.ny-work-arrow\{.*?\}'
+                  original_small = '#ny .ny-works-grid--categories .ny-work-arrow{\n  position:absolute;\n  z-index:2;\n  right:18px;\n  bottom:16px;\n  color:var(--blue);\n  font:500 25px/1 \'DM Mono\',monospace;\n}'
+                  text, n = re.subn(pattern, original_small, text, count=1, flags=re.S)
+                  if n != 1:
+                      raise SystemExit(f'Expected one category arrow CSS block, found {n}')
+                  text = re.sub(r'#ny \.ny-works-grid--categories \.ny-work:hover \.ny-work-arrow\{.*?\}', '', text, flags=re.S)
+                  text = re.sub(r'(<span class="ny-work-arrow">)[→↓↘](</span>)', r'\1↘\2', text)
+
+              p.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit changes and remove workflow
+        run: |
+          rm .github/workflows/fix-names-and-arrow-size.yml
+          git config user.name "heydiana"
+          git config user.email "70851747+heydiana@users.noreply.github.com"
+          git add index.html works.html .github/workflows/fix-names-and-arrow-size.yml
+          git commit -m "Fix portfolio names and restore small diagonal arrows"
+          git push
