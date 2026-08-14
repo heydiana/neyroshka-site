@@ -1,4 +1,4 @@
-name: Fix photoset collage five images
+name: Fix photoset framing and reload position
 on:
   push:
     branches: [main]
@@ -7,38 +7,75 @@ permissions:
   contents: write
 jobs:
   update:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch photoset collage only
+      - name: Patch works page
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('works.html')
           s=p.read_text(encoding='utf-8')
 
-          # Remove only the user-specified second uploaded photo (current photoset frame 04).
-          old=''' <button class="tile" type="button"><img src="images/ai-photo/photoset/vidu-image-3333479222572912.png" alt="Красный фотосет — кадр 04"><span class="label">ФОТОСЕТ — 04</span></button>'''
-          s=s.replace(old,'',1)
-
+          # Keep the first large photo unchanged; move the four smaller photos down so faces are visible.
+          css_marker='/* PHOTOSET FACE POSITION FIX 2026-08-14 */'
           css='''
-/* PHOTOSHOOT collage: five-image filled layout, no black letterboxing */
-#nw #s01 .photoset-collage{display:grid!important;grid-template-columns:1.25fr 1fr 1fr 1.25fr!important;grid-template-rows:repeat(2,250px)!important;gap:10px!important;overflow:visible!important;padding:4px 0!important}
-#nw #s01 .photoset-collage .tile{background:transparent!important;overflow:hidden!important;width:auto!important;height:auto!important;margin:0!important;transform:none!important}
-#nw #s01 .photoset-collage .tile:nth-child(1){grid-column:1!important;grid-row:1/3!important}
-#nw #s01 .photoset-collage .tile:nth-child(2){grid-column:2/4!important;grid-row:1!important}
-#nw #s01 .photoset-collage .tile:nth-child(3){grid-column:4!important;grid-row:1/3!important}
-#nw #s01 .photoset-collage .tile:nth-child(4){grid-column:2!important;grid-row:2!important}
-#nw #s01 .photoset-collage .tile:nth-child(5){grid-column:3!important;grid-row:2!important}
-#nw #s01 .photoset-collage .tile img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important;transform:none!important}
-#nw #s01 .photoset-collage .tile:hover img{transform:none!important}
-#nw #s01 .photoset-collage .tile:after{display:none!important;content:none!important}
-#nw #s01 .photoset-collage .tile .label{display:none!important}
-@media(max-width:760px){#nw #s01 .photoset-collage{grid-template-columns:1fr 1fr!important;grid-template-rows:repeat(3,230px)!important}#nw #s01 .photoset-collage .tile:nth-child(n){grid-column:auto!important;grid-row:auto!important}}
+/* PHOTOSET FACE POSITION FIX 2026-08-14 */
+#nw #s01 .photoset-collage .tile:nth-child(n+2) img{object-position:center 10%!important}
 '''
-          marker='/* PHOTOSHOOT collage: five-image filled layout, no black letterboxing */'
-          if marker not in s:
+          if css_marker not in s:
               s=s.replace('</style>',css+'</style>',1)
+
+          start='<script id="preserve-scroll-on-reload">'
+          end='</script>'
+          if start not in s:
+              raise SystemExit('preserve-scroll-on-reload script not found')
+          a=s.index(start)
+          b=s.index(end,a)+len(end)
+          replacement='''<script id="preserve-scroll-on-reload">
+(function(){
+  var key='neyroshka:works:scrollY';
+  var savedHash=location.hash;
+  try{history.scrollRestoration='manual';}catch(e){}
+
+  /* Remove the fragment during initial load so the browser cannot jump to #s01-price on refresh. */
+  if(savedHash){
+    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+  }
+
+  function save(){
+    try{sessionStorage.setItem(key,String(window.scrollY||window.pageYOffset||0));}catch(e){}
+  }
+
+  function restore(){
+    try{
+      var y=sessionStorage.getItem(key);
+      if(y===null)return;
+      var target=parseFloat(y)||0;
+      window.scrollTo(0,target);
+      requestAnimationFrame(function(){window.scrollTo(0,target);});
+      setTimeout(function(){
+        window.scrollTo(0,target);
+        if(savedHash){
+          try{history.replaceState(null,'',location.pathname+location.search+savedHash);}catch(e){}
+        }
+      },80);
+    }catch(e){}
+  }
+
+  window.addEventListener('pagehide',save);
+  window.addEventListener('beforeunload',save);
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',restore,{once:true});
+  }else{
+    restore();
+  }
+  window.addEventListener('load',restore,{once:true});
+  window.addEventListener('pageshow',restore);
+})();
+</script>'''
+          s=s[:a]+replacement+s[b:]
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit changes
@@ -47,5 +84,5 @@ jobs:
           git config user.name "heydiana"
           git config user.email "70851747+heydiana@users.noreply.github.com"
           git add works.html .github/workflows/photoset-five-no-black.yml
-          git commit -m "Fix photoset collage layout and remove one frame"
+          git commit -m "Show photoset faces and preserve exact scroll on refresh"
           git push
