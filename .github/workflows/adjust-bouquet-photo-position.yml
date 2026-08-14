@@ -1,0 +1,33 @@
+name: Adjust bouquet photo position
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/adjust-bouquet-photo-position.yml']
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Adjust only bouquet photo position
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('works.html')
+          s=p.read_text(encoding='utf-8')
+          old='#nw #s01 .s01-result .s01-card img[src="images/ai-photo/result/325dd2bf-885d-445a-88d5-8321314afc06.png"]{object-position:50% 15%!important}'
+          new='#nw #s01 .s01-result .s01-card img[src="images/ai-photo/result/325dd2bf-885d-445a-88d5-8321314afc06.png"]{object-position:50% 0%!important}'
+          if old not in s:
+              raise SystemExit('Target CSS rule not found; aborting without changes')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit change
+        run: |
+          rm .github/workflows/adjust-bouquet-photo-position.yml
+          git config user.name "heydiana"
+          git config user.email "70851747+heydiana@users.noreply.github.com"
+          git add works.html .github/workflows/adjust-bouquet-photo-position.yml
+          git commit -m "Raise bouquet photo crop in s01"
+          git push
