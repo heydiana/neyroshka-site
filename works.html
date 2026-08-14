@@ -433,6 +433,15 @@ body.nw-modal-open{overflow:hidden}
 #nw #s06 .sticker-collage .tile:nth-child(7){grid-column:3/5!important}
 @media(max-width:1100px){#nw #s06 .sticker-collage{grid-template-columns:repeat(4,1fr)!important;grid-auto-rows:430px!important}#nw #s06 .sticker-collage .tile:nth-child(7){grid-column:span 2!important}}
 @media(max-width:760px){#nw #s06 .sticker-collage{grid-template-columns:repeat(2,1fr)!important;grid-auto-rows:280px!important;gap:8px!important}#nw #s06 .sticker-collage .tile{grid-column:span 2!important}#nw #s06 .sticker-collage .tile:nth-child(7){grid-column:span 2!important}}
+
+/* All gallery collages: same compact scale as the cards grid (2026-08-14) */
+#nw #s01 .story-collage,#nw #s02 .product-collage,#nw #s05 .edu-collage,#nw #s06 .sticker-collage{max-width:1080px!important;margin:0 auto!important}
+#nw #s01 .story-collage{grid-template-rows:repeat(4,240px)!important}
+#nw #s02 .product-collage{grid-template-rows:repeat(4,240px)!important}
+#nw #s05 .edu-collage{grid-auto-rows:393px!important}
+#nw #s06 .sticker-collage{grid-auto-rows:413px!important}
+#nw #s01 .photoset-collage{transform:scale(.79)!important;margin-bottom:-132px!important}
+@media(max-width:1100px){#nw #s01 .story-collage,#nw #s02 .product-collage,#nw #s05 .edu-collage,#nw #s06 .sticker-collage{max-width:100%!important}}
 </style> <script>
 window.__sourcePhotos=['images/ai-photo/source/photo_2026-04-27_00-14-44.jpg','images/ai-photo/source/photo_2026-04-27_00-14-39.jpg','images/ai-photo/source/photo_2026-04-27_00-14-24.jpg'];
 window.__sourcePhotos.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=u;document.head.appendChild(l)});
