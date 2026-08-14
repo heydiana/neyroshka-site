@@ -1,0 +1,48 @@
+name: Fix s01 inline gallery cleanly
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/fix-s01-inline-clean.yml']
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore clean base and rebuild s01 header gallery
+        run: |
+          git show ace090217c947366d20fc69952cafea9a00402aa:works.html > works.html
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('works.html')
+          s=p.read_text(encoding='utf-8')
+
+          css='''\n/* s01 clean inline gallery: 5 results | divider | 3 sources */\n#nw #s01 .fan-tabs,#nw #s01 .fan-caption,#nw #s01 .fan-hint{display:none!important}\n#nw #s01 .s01-inline{display:flex;align-items:center;gap:10px;overflow-x:auto;padding:6px 0 20px;margin-top:34px;scrollbar-width:thin;scrollbar-color:var(--blue) transparent}\n#nw #s01 .s01-inline::-webkit-scrollbar{height:5px}\n#nw #s01 .s01-inline::-webkit-scrollbar-thumb{background:var(--blue);border-radius:4px}\n#nw #s01 .s01-group{display:flex;align-items:center;gap:10px;flex:0 0 auto}\n#nw #s01 .s01-item{margin:0;flex:0 0 auto;height:300px;border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden}\n#nw #s01 .s01-item img{display:block;width:auto;height:100%;max-width:none;object-fit:contain}\n#nw #s01 .s01-divider{flex:0 0 1px;height:270px;background:var(--line);margin:0 18px}\n@media(max-width:760px){#nw #s01 .s01-item{height:230px}#nw #s01 .s01-divider{height:205px;margin:0 12px}}\n'''
+          s=s.replace('</style>',css+'</style>',1)
+
+          start=s.index('<section class="section fan-section" id="s01">')
+          sub=s.index('<div class="subblock">', start)
+
+          prefix='''<section class="section fan-section" id="s01"><div class="w"> <div class="head fan-title"><div><button type="button" class="num copy-link" data-target="s01">01 / PHOTOSHOOTS</button><h2>AI-фотосессии</h2></div><p class="copy">Все фотосессии: личный образ, fashion-серия или тёмная драматичная история. Выбираем настроение и собираем его в цельный визуал.</p></div> <span class="sub">ИЗ ИСХОДНИКОВ В КАДРЫ</span> <div class="s01-inline"> <div class="s01-group s01-results"> <figure class="s01-item"><img src="images/ai-photo/result/f00bdb86-a459-4370-89db-e10119255be1.png" alt="Результат 01"></figure> <figure class="s01-item"><img src="images/ai-photo/result/c31164b0-81f3-42ac-8de9-b639ea5baf82.png" alt="Результат 02"></figure> <figure class="s01-item"><img src="images/ai-photo/result/bec5e3fd-6d89-4197-970e-e4ba0bbaad08.png" alt="Результат 03"></figure> <figure class="s01-item"><img src="images/ai-photo/result/6c0ce960-033d-47a2-ada8-1a730858d528.png" alt="Результат 04"></figure> <figure class="s01-item"><img src="images/ai-photo/result/325dd2bf-885d-445a-88d5-8321314afc06.png" alt="Результат 05"></figure> </div> <span class="s01-divider" aria-hidden="true"></span> <div class="s01-group s01-sources"> <figure class="s01-item"><img src="images/ai-photo/source/photo_2026-04-27_00-14-44.jpg" alt="Исходник 01"></figure> <figure class="s01-item"><img src="images/ai-photo/source/photo_2026-04-27_00-14-39.jpg" alt="Исходник 02"></figure> <figure class="s01-item"><img src="images/ai-photo/source/photo_2026-04-27_00-14-24.jpg" alt="Исходник 03"></figure> </div> </div> '''
+
+          s=s[:start]+prefix+s[sub:]
+
+          # Prevent old JS from assuming the removed fan-deck exists.
+          s=s.replace("const cards=[...deck.querySelectorAll('.card')];","const cards=deck?[...deck.querySelectorAll('.card')]:[];")
+          s=s.replace("deck.addEventListener('click',e=>{","if(deck)deck.addEventListener('click',e=>{")
+          s=s.replace("root.querySelectorAll('[data-mode]').forEach(btn=>btn.addEventListener('click',()=>{","if(deck)root.querySelectorAll('[data-mode]').forEach(btn=>btn.addEventListener('click',()=>{")
+          s=s.replace("renderDeck();\n\n// горизонтальные ленты", "if(deck)renderDeck();\n\n// горизонтальные ленты")
+
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit fix
+        run: |
+          rm .github/workflows/fix-s01-inline-clean.yml
+          git config user.name "heydiana"
+          git config user.email "70851747+heydiana@users.noreply.github.com"
+          git add works.html .github/workflows/fix-s01-inline-clean.yml
+          git commit -m "Fix AI photoshoots inline gallery"
+          git push
