@@ -17,57 +17,16 @@ jobs:
           from pathlib import Path
           p = Path('works.html')
           s = p.read_text(encoding='utf-8')
-
           css_marker = '/* PHOTOSET FACE POSITION FIX 2026-08-14 */'
-          css = '''
-/* PHOTOSET FACE POSITION FIX 2026-08-14 */
-#nw #s01 .photoset-collage .tile:nth-child(n+2) img{object-position:center 10%!important}
-'''
+          css = "\n/* PHOTOSET FACE POSITION FIX 2026-08-14 */\n#nw #s01 .photoset-collage .tile:nth-child(n+2) img{object-position:center 10%!important}\n"
           if css_marker not in s:
               s = s.replace('</style>', css + '</style>', 1)
-
           start = '<script id="preserve-scroll-on-reload">'
           if start not in s:
               raise SystemExit('preserve scroll script not found')
           a = s.index(start)
           b = s.index('</script>', a) + len('</script>')
-          replacement = '''<script id="preserve-scroll-on-reload">
-(function(){
-  var key='neyroshka:works:scrollY';
-  var savedHash=location.hash;
-  try{history.scrollRestoration='manual';}catch(e){}
-  if(savedHash){
-    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
-  }
-  function save(){
-    try{sessionStorage.setItem(key,String(window.scrollY||window.pageYOffset||0));}catch(e){}
-  }
-  function restore(){
-    try{
-      var y=sessionStorage.getItem(key);
-      if(y===null)return;
-      var target=parseFloat(y)||0;
-      window.scrollTo(0,target);
-      requestAnimationFrame(function(){window.scrollTo(0,target);});
-      setTimeout(function(){
-        window.scrollTo(0,target);
-        if(savedHash){
-          try{history.replaceState(null,'',location.pathname+location.search+savedHash);}catch(e){}
-        }
-      },120);
-    }catch(e){}
-  }
-  window.addEventListener('pagehide',save);
-  window.addEventListener('beforeunload',save);
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',restore,{once:true});
-  }else{
-    restore();
-  }
-  window.addEventListener('load',restore,{once:true});
-  window.addEventListener('pageshow',restore);
-})();
-</script>'''
+          replacement = "<script id=\"preserve-scroll-on-reload\">\n(function(){\n  var key='neyroshka:works:scrollY';\n  var savedHash=location.hash;\n  try{history.scrollRestoration='manual';}catch(e){}\n  if(savedHash){\n    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}\n  }\n  function save(){\n    try{sessionStorage.setItem(key,String(window.scrollY||window.pageYOffset||0));}catch(e){}\n  }\n  function restore(){\n    try{\n      var y=sessionStorage.getItem(key);\n      if(y===null)return;\n      var target=parseFloat(y)||0;\n      window.scrollTo(0,target);\n      requestAnimationFrame(function(){window.scrollTo(0,target);});\n      setTimeout(function(){\n        window.scrollTo(0,target);\n        if(savedHash){\n          try{history.replaceState(null,'',location.pathname+location.search+savedHash);}catch(e){}\n        }\n      },120);\n    }catch(e){}\n  }\n  window.addEventListener('pagehide',save);\n  window.addEventListener('beforeunload',save);\n  if(document.readyState==='loading'){\n    document.addEventListener('DOMContentLoaded',restore,{once:true});\n  }else{\n    restore();\n  }\n  window.addEventListener('load',restore,{once:true});\n  window.addEventListener('pageshow',restore);\n})();\n</script>"
           s = s[:a] + replacement + s[b:]
           p.write_text(s, encoding='utf-8')
           PY
