@@ -320,6 +320,9 @@ body.nw-modal-open{overflow:hidden}
 #nw #s01 .photoset-collage .tile img{width:100%!important;height:100%!important;object-fit:cover!important}
 #nw #s01 .photoset-collage-block>.fan-hint{display:none!important}
 @media(max-width:760px){#nw #s01 .photoset-collage{grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,180px)}#nw #s01 .photoset-collage .tile:nth-child(n){grid-column:auto;grid-row:auto}}
+
+/* photoset: keep faces visible in the collage */
+#nw #s01 .photoset-collage .tile img{object-position:50% 18%!important}
 </style> <script>
 window.__sourcePhotos=['images/ai-photo/source/photo_2026-04-27_00-14-44.jpg','images/ai-photo/source/photo_2026-04-27_00-14-39.jpg','images/ai-photo/source/photo_2026-04-27_00-14-24.jpg'];
 window.__sourcePhotos.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=u;document.head.appendChild(l)});
@@ -687,6 +690,39 @@ document.addEventListener('DOMContentLoaded',function(){
       box.classList.remove('open');
       box.setAttribute('aria-hidden','true');
       full.removeAttribute('src');
+    }
+  });
+});
+</script>
+
+<script id="photoset-lightbox-fix">
+document.addEventListener('DOMContentLoaded',function(){
+  var box=document.getElementById('s01-lightbox');
+  if(!box)return;
+  var full=box.querySelector('img');
+  function closeBox(){
+    box.classList.remove('open');
+    box.setAttribute('aria-hidden','true');
+    if(full)full.removeAttribute('src');
+  }
+  /* close by tapping/clicking anywhere on the overlay, including the enlarged photo */
+  box.addEventListener('click',function(){closeBox();});
+  /* make the six-photo collage open in the same fullscreen viewer */
+  document.querySelectorAll('#s01 .photoset-collage .tile img').forEach(function(img){
+    img.parentElement.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      full.src=img.src;
+      full.alt=img.alt||'';
+      box.classList.add('open');
+      box.setAttribute('aria-hidden','false');
+    });
+  });
+  /* keep keyboard close as well */
+  document.addEventListener('keydown',function(e){
+    if((e.key==='Tab'||e.key==='Escape')&&box.classList.contains('open')){
+      e.preventDefault();
+      closeBox();
     }
   });
 });
