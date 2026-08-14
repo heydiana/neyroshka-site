@@ -1,0 +1,36 @@
+name: Fix crouching photo position final
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-crouching-photo-position-final.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-position:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update only crouching photo position
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('works.html')
+          s = p.read_text(encoding='utf-8')
+          old = '#nw #s01 .photoset-collage .tile:nth-child(5) img{object-position:center 5%!important}'
+          new = '#nw #s01 .photoset-collage .tile:nth-child(5) img{object-position:center 42%!important}'
+          if old not in s:
+              raise SystemExit('Target rule not found; no changes made')
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit change
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add works.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix crouching photo vertical position'
+          git push
