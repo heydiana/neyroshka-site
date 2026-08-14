@@ -1,0 +1,53 @@
+name: Convert story rail to collage
+
+on:
+  push:
+    paths:
+      - '.github/workflows/story-collage.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Convert only story block to collage
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('works.html')
+          s = p.read_text(encoding='utf-8')
+
+          old = '<div class="subblock"> <span class="sub">ВЫБЕРИ СВОЙ СЮЖЕТ</span> <div class="rail rail-blue">'
+          new = '<div class="subblock story-collage-block"> <span class="sub">ВЫБЕРИ СВОЙ СЮЖЕТ</span> <div class="rail rail-blue story-collage">'
+          if old not in s:
+              raise SystemExit('Story block opening not found; no changes made')
+          s = s.replace(old, new, 1)
+
+          css = '''
+
+/* STORY COLLAGE — same visual treatment as the photoset collage */
+#nw #s01 .story-collage{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-auto-rows:220px!important;grid-auto-flow:dense!important;gap:10px!important;overflow:visible!important;scroll-snap-type:none!important;padding:4px 0!important;cursor:default!important}
+#nw #s01 .story-collage .tile{position:relative!important;display:block!important;min-width:0!important;width:auto!important;height:auto!important;min-height:0!important;margin:0!important;transform:none!important;scroll-snap-align:none!important;overflow:hidden!important;background:transparent!important}
+#nw #s01 .story-collage .tile:nth-child(1),#nw #s01 .story-collage .tile:nth-child(6),#nw #s01 .story-collage .tile:nth-child(11){grid-row:span 2!important}
+#nw #s01 .story-collage .tile img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important;transform:none!important}
+#nw #s01 .story-collage .tile:hover img{transform:none!important}
+#nw #s01 .story-collage .tile:after,#nw #s01 .story-collage .tile .label{display:none!important;content:none!important}
+#nw #s01 .story-collage-block>.fan-hint{display:none!important}
+@media(max-width:760px){#nw #s01 .story-collage{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:190px!important}#nw #s01 .story-collage .tile:nth-child(1),#nw #s01 .story-collage .tile:nth-child(6),#nw #s01 .story-collage .tile:nth-child(11){grid-row:span 2!important}}
+'''
+          if '/* STORY COLLAGE — same visual treatment as the photoset collage */' not in s:
+              s = s.replace('</style>', css + '\n</style>', 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit change
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add works.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Convert choose your story section to collage'
+          git push
