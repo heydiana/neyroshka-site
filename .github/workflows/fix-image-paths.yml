@@ -1,0 +1,47 @@
+name: Fix image paths
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-image-paths.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix two image paths
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('works.html')
+          s = p.read_text(encoding='utf-8')
+          old_story = 'https://static.tildacdn.ink/tild3635-3830-4036-b664-343365633931/7e1b64f0-4567-4821-9.png'
+          new_story = 'images/education/7e1b64f0-4567-4821-9d1c-c40a70e6d375.png'
+          old_edu = 'images/education/7e1b64f0-4567-4821-9d1c-c40a70e6d375.png'
+          new_edu = 'images/education/4f62945f-3474-4e47-854e-0dc8f2e622aa.png'
+          if old_story not in s:
+              raise SystemExit('Story path not found')
+          s = s.replace(old_story, new_story, 1)
+          idx = s.find('id="s05"')
+          if idx == -1:
+              raise SystemExit('Education section not found')
+          head, tail = s[:idx], s[idx:]
+          if old_edu not in tail:
+              raise SystemExit('Education path not found')
+          tail = tail.replace(old_edu, new_edu, 1)
+          p.write_text(head + tail, encoding='utf-8')
+      - name: Commit fix and remove temporary workflow
+        shell: bash
+        run: |
+          rm .github/workflows/fix-image-paths.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add works.html .github/workflows/fix-image-paths.yml
+          git commit -m "Fix story and education image mapping"
+          git push
