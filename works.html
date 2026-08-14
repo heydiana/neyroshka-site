@@ -736,5 +736,23 @@ document.addEventListener('DOMContentLoaded',function(){
   });
 });
 </script>
+
+<script id="preserve-scroll-on-reload">
+(function(){
+  var key='neyroshka:works:scrollY';
+  try{history.scrollRestoration='manual';}catch(e){}
+  function save(){try{sessionStorage.setItem(key,String(window.scrollY||window.pageYOffset||0));}catch(e){}}
+  window.addEventListener('pagehide',save);
+  window.addEventListener('beforeunload',save);
+  window.addEventListener('pageshow',function(){
+    try{
+      var y=sessionStorage.getItem(key);
+      if(y!==null){
+        requestAnimationFrame(function(){requestAnimationFrame(function(){window.scrollTo(0,parseFloat(y)||0);});});
+      }
+    }catch(e){}
+  });
+})();
+</script>
 </body>
 </html>
