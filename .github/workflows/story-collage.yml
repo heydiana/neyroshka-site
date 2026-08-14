@@ -17,28 +17,51 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
+
           p = Path('works.html')
           s = p.read_text(encoding='utf-8')
 
-          old = '<div class="subblock"> <span class="sub">ВЫБЕРИ СВОЙ СЮЖЕТ</span> <div class="rail rail-blue">'
-          new = '<div class="subblock story-collage-block"> <span class="sub">ВЫБЕРИ СВОЙ СЮЖЕТ</span> <div class="rail rail-blue story-collage">'
-          if old not in s:
-              raise SystemExit('Story block opening not found; no changes made')
-          s = s.replace(old, new, 1)
+          marker = '<span class="sub">ВЫБЕРИ СВОЙ СЮЖЕТ</span>'
+          pos = s.find(marker)
+          if pos == -1:
+              raise SystemExit('Story heading not found; no changes made')
+
+          # add block class only to the subblock that contains the heading
+          start = s.rfind('<div class="subblock', 0, pos)
+          if start == -1:
+              raise SystemExit('Story subblock start not found')
+          tag_end = s.find('>', start)
+          opening = s[start:tag_end+1]
+          if 'story-collage-block' not in opening:
+              replacement = opening.replace('class="subblock', 'class="subblock story-collage-block', 1)
+              s = s[:start] + replacement + s[tag_end+1:]
+              delta = len(replacement) - len(opening)
+              pos += delta
+
+          # add story-collage only to the first rail after the story heading
+          rail_pos = s.find('<div class="rail rail-blue', pos)
+          if rail_pos == -1:
+              raise SystemExit('Story rail not found')
+          rail_end = s.find('>', rail_pos)
+          rail_opening = s[rail_pos:rail_end+1]
+          if 'story-collage' not in rail_opening:
+              rail_replacement = rail_opening.replace('class="rail rail-blue', 'class="rail rail-blue story-collage', 1)
+              s = s[:rail_pos] + rail_replacement + s[rail_end+1:]
 
           css = '''
 
-/* STORY COLLAGE — same visual treatment as the photoset collage */
-#nw #s01 .story-collage{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-auto-rows:220px!important;grid-auto-flow:dense!important;gap:10px!important;overflow:visible!important;scroll-snap-type:none!important;padding:4px 0!important;cursor:default!important}
+/* STORY COLLAGE — match the photoset collage treatment */
+#nw #s01 .story-collage{display:grid!important;grid-template-columns:1.15fr 1fr 1fr!important;grid-auto-rows:250px!important;grid-auto-flow:dense!important;gap:10px!important;overflow:visible!important;scroll-snap-type:none!important;padding:4px 0!important;cursor:default!important}
 #nw #s01 .story-collage .tile{position:relative!important;display:block!important;min-width:0!important;width:auto!important;height:auto!important;min-height:0!important;margin:0!important;transform:none!important;scroll-snap-align:none!important;overflow:hidden!important;background:transparent!important}
-#nw #s01 .story-collage .tile:nth-child(1),#nw #s01 .story-collage .tile:nth-child(6),#nw #s01 .story-collage .tile:nth-child(11){grid-row:span 2!important}
+#nw #s01 .story-collage .tile:nth-child(1),#nw #s01 .story-collage .tile:nth-child(5),#nw #s01 .story-collage .tile:nth-child(9),#nw #s01 .story-collage .tile:nth-child(13){grid-row:span 2!important}
 #nw #s01 .story-collage .tile img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important;transform:none!important}
 #nw #s01 .story-collage .tile:hover img{transform:none!important}
 #nw #s01 .story-collage .tile:after,#nw #s01 .story-collage .tile .label{display:none!important;content:none!important}
 #nw #s01 .story-collage-block>.fan-hint{display:none!important}
-@media(max-width:760px){#nw #s01 .story-collage{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:190px!important}#nw #s01 .story-collage .tile:nth-child(1),#nw #s01 .story-collage .tile:nth-child(6),#nw #s01 .story-collage .tile:nth-child(11){grid-row:span 2!important}}
+@media(max-width:760px){#nw #s01 .story-collage{grid-template-columns:1fr 1fr!important;grid-auto-rows:210px!important}#nw #s01 .story-collage .tile:nth-child(n){grid-row:auto!important}}
 '''
-          if '/* STORY COLLAGE — same visual treatment as the photoset collage */' not in s:
+          if '/* STORY COLLAGE — match the photoset collage treatment */' not in s:
               s = s.replace('</style>', css + '\n</style>', 1)
 
           p.write_text(s, encoding='utf-8')
