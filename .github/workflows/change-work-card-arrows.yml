@@ -1,0 +1,58 @@
+name: Change work card arrows
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/change-work-card-arrows.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  change:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace arrows only in work cards
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          pattern = re.compile(r'(<a\b[^>]*class=["\'][^"\']*\bny-work\b[^"\']*["\'][^>]*>.*?</a>)', re.S)
+          cards = pattern.findall(text)
+          if len(cards) != 6:
+              raise SystemExit(f'Expected exactly 6 ny-work cards, found {len(cards)}')
+
+          changed = 0
+          replacements = [('↗','↓'), ('&#8599;','↓'), ('&nearr;','↓')]
+
+          def fix_card(m):
+              nonlocal_dummy = None
+              block = m.group(1)
+              global changed
+              before = block
+              for old, new in replacements:
+                  block = block.replace(old, new)
+              if block != before:
+                  changed += 1
+              return block
+
+          new_text = pattern.sub(fix_card, text)
+          if changed != 6:
+              raise SystemExit(f'Expected arrows to change in all 6 cards, changed {changed}')
+
+          path.write_text(new_text, encoding='utf-8')
+          PY
+      - name: Commit change and remove temporary workflow
+        run: |
+          rm .github/workflows/change-work-card-arrows.yml
+          git config user.name "heydiana"
+          git config user.email "70851747+heydiana@users.noreply.github.com"
+          git add index.html .github/workflows/change-work-card-arrows.yml
+          git commit -m "Change work card arrows to down"
+          git push
