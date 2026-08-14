@@ -1,0 +1,38 @@
+name: Adjust photoset layout
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/adjust-photoset-layout.yml'
+permissions:
+  contents: write
+jobs:
+  adjust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update photoset CSS
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('works.html')
+          s = p.read_text(encoding='utf-8')
+          old = "#nw #s01 .photoset-collage{display:grid!important;grid-template-columns:1.12fr 1.28fr 1.28fr!important;grid-template-rows:310px 310px!important;gap:10px!important;overflow:visible!important;padding:4px 0!important;background:transparent!important}"
+          new = "#nw #s01 .photoset-collage{display:grid!important;grid-template-columns:1.12fr 1.28fr 1.28fr!important;grid-template-rows:260px 260px!important;gap:10px!important;overflow:visible!important;padding:4px 0!important;background:transparent!important}"
+          if old not in s:
+              raise SystemExit('Expected photoset grid rule not found')
+          s = s.replace(old, new, 1)
+          marker = "/* PHOTOSET FACE POSITION FIX 2026-08-14 */\n#nw #s01 .photoset-collage .tile:nth-child(n+2) img{object-position:center 10%!important}"
+          replacement = marker + "\n/* crouching frame: lift subject slightly while keeping a small red margin above */\n#nw #s01 .photoset-collage .tile:nth-child(5) img{object-position:center 20%!important}"
+          if marker not in s:
+              raise SystemExit('Expected face-position rule not found')
+          s = s.replace(marker, replacement, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add works.html
+          git commit -m "Refine photoset collage layout" || exit 0
+          git push
