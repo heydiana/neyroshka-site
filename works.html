@@ -345,6 +345,9 @@ body.nw-modal-open{overflow:hidden}
 #nw #s01 .photoset-collage .tile:hover img{transform:none!important}
 #nw #s01 .photoset-collage .tile:after,#nw #s01 .photoset-collage .tile .label{display:none!important;content:none!important}
 @media(max-width:760px){#nw #s01 .photoset-collage{grid-template-columns:1fr 1fr!important;grid-template-rows:repeat(3,240px)!important}#nw #s01 .photoset-collage .tile:nth-child(n){grid-column:auto!important;grid-row:auto!important}}
+
+/* PHOTOSET FACE POSITION FIX 2026-08-14 */
+#nw #s01 .photoset-collage .tile:nth-child(n+2) img{object-position:center 10%!important}
 </style> <script>
 window.__sourcePhotos=['images/ai-photo/source/photo_2026-04-27_00-14-44.jpg','images/ai-photo/source/photo_2026-04-27_00-14-39.jpg','images/ai-photo/source/photo_2026-04-27_00-14-24.jpg'];
 window.__sourcePhotos.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=u;document.head.appendChild(l)});
@@ -753,18 +756,38 @@ document.addEventListener('DOMContentLoaded',function(){
 <script id="preserve-scroll-on-reload">
 (function(){
   var key='neyroshka:works:scrollY';
+  var savedHash=location.hash;
   try{history.scrollRestoration='manual';}catch(e){}
-  function save(){try{sessionStorage.setItem(key,String(window.scrollY||window.pageYOffset||0));}catch(e){}}
-  window.addEventListener('pagehide',save);
-  window.addEventListener('beforeunload',save);
-  window.addEventListener('pageshow',function(){
+  if(savedHash){
+    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+  }
+  function save(){
+    try{sessionStorage.setItem(key,String(window.scrollY||window.pageYOffset||0));}catch(e){}
+  }
+  function restore(){
     try{
       var y=sessionStorage.getItem(key);
-      if(y!==null){
-        requestAnimationFrame(function(){requestAnimationFrame(function(){window.scrollTo(0,parseFloat(y)||0);});});
-      }
+      if(y===null)return;
+      var target=parseFloat(y)||0;
+      window.scrollTo(0,target);
+      requestAnimationFrame(function(){window.scrollTo(0,target);});
+      setTimeout(function(){
+        window.scrollTo(0,target);
+        if(savedHash){
+          try{history.replaceState(null,'',location.pathname+location.search+savedHash);}catch(e){}
+        }
+      },120);
     }catch(e){}
-  });
+  }
+  window.addEventListener('pagehide',save);
+  window.addEventListener('beforeunload',save);
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',restore,{once:true});
+  }else{
+    restore();
+  }
+  window.addEventListener('load',restore,{once:true});
+  window.addEventListener('pageshow',restore);
 })();
 </script>
 </body>
