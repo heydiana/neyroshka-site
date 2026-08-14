@@ -1,53 +1,47 @@
-name: Fix photoset framing and reload position
+name: Patch works page
 on:
   push:
-    branches: [main]
-    paths: ['.github/workflows/photoset-five-no-black.yml']
+    paths:
+      - '.github/workflows/photoset-five-no-black.yml'
 permissions:
   contents: write
 jobs:
-  update:
-    if: github.actor != 'github-actions[bot]'
+  patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch works page
+      - name: Patch works.html
+        shell: bash
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
-          p=Path('works.html')
-          s=p.read_text(encoding='utf-8')
+          p = Path('works.html')
+          s = p.read_text(encoding='utf-8')
 
-          # Keep the first large photo unchanged; move the four smaller photos down so faces are visible.
-          css_marker='/* PHOTOSET FACE POSITION FIX 2026-08-14 */'
-          css='''
+          css_marker = '/* PHOTOSET FACE POSITION FIX 2026-08-14 */'
+          css = '''
 /* PHOTOSET FACE POSITION FIX 2026-08-14 */
 #nw #s01 .photoset-collage .tile:nth-child(n+2) img{object-position:center 10%!important}
 '''
           if css_marker not in s:
-              s=s.replace('</style>',css+'</style>',1)
+              s = s.replace('</style>', css + '</style>', 1)
 
-          start='<script id="preserve-scroll-on-reload">'
-          end='</script>'
+          start = '<script id="preserve-scroll-on-reload">'
           if start not in s:
-              raise SystemExit('preserve-scroll-on-reload script not found')
-          a=s.index(start)
-          b=s.index(end,a)+len(end)
-          replacement='''<script id="preserve-scroll-on-reload">
+              raise SystemExit('preserve scroll script not found')
+          a = s.index(start)
+          b = s.index('</script>', a) + len('</script>')
+          replacement = '''<script id="preserve-scroll-on-reload">
 (function(){
   var key='neyroshka:works:scrollY';
   var savedHash=location.hash;
   try{history.scrollRestoration='manual';}catch(e){}
-
-  /* Remove the fragment during initial load so the browser cannot jump to #s01-price on refresh. */
   if(savedHash){
     try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
   }
-
   function save(){
     try{sessionStorage.setItem(key,String(window.scrollY||window.pageYOffset||0));}catch(e){}
   }
-
   function restore(){
     try{
       var y=sessionStorage.getItem(key);
@@ -60,10 +54,9 @@ jobs:
         if(savedHash){
           try{history.replaceState(null,'',location.pathname+location.search+savedHash);}catch(e){}
         }
-      },80);
+      },120);
     }catch(e){}
   }
-
   window.addEventListener('pagehide',save);
   window.addEventListener('beforeunload',save);
   if(document.readyState==='loading'){
@@ -75,14 +68,16 @@ jobs:
   window.addEventListener('pageshow',restore);
 })();
 </script>'''
-          s=s[:a]+replacement+s[b:]
-          p.write_text(s,encoding='utf-8')
+          s = s[:a] + replacement + s[b:]
+          p.write_text(s, encoding='utf-8')
           PY
-      - name: Commit changes
+      - name: Commit patch
+        shell: bash
         run: |
-          rm .github/workflows/photoset-five-no-black.yml
           git config user.name "heydiana"
           git config user.email "70851747+heydiana@users.noreply.github.com"
-          git add works.html .github/workflows/photoset-five-no-black.yml
-          git commit -m "Show photoset faces and preserve exact scroll on refresh"
-          git push
+          git add works.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Show photoset faces and preserve exact scroll on refresh"
+            git push
+          fi
