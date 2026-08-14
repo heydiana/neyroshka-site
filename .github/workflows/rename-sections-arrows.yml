@@ -1,0 +1,65 @@
+name: Rename section titles and arrows
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rename-sections-arrows.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Update titles and arrows
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          title_map = {
+              'ТВОЯ ЭРА': ('AI-фотосессии', 'https://heydiana.github.io/neyroshka-site/works.html#s01'),
+              'ТОВАР В КАДРЕ': ('Фото товара', 'https://heydiana.github.io/neyroshka-site/works.html#s02'),
+              'ПЕРВЫЙ ЭКРАН': ('Карточки товара', 'https://heydiana.github.io/neyroshka-site/works.html#s03'),
+              'ДВИЖЕНИЕ В КАДРЕ': ('AI-видео', 'https://heydiana.github.io/neyroshka-site/works.html#s04'),
+              'ЗНАНИЯ В КАДРЕ': ('Учебные материалы', 'https://heydiana.github.io/neyroshka-site/works.html#s05'),
+              'ТВОИ СТИКЕРЫ': ('Стикеры', 'https://heydiana.github.io/neyroshka-site/works.html#s06'),
+          }
+
+          for filename in ('index.html','works.html'):
+              p = Path(filename)
+              text = p.read_text(encoding='utf-8')
+              before = text
+
+              for old, (new, url) in title_map.items():
+                  # Replace visible text nodes only, preserving surrounding tags.
+                  pattern = re.compile(r'(>\s*)' + re.escape(old) + r'(\s*<)')
+                  text = pattern.sub(r'\1<a href="' + url + r'">' + new + r'</a>\2', text)
+
+              # Category-card arrows: down -> right only for ny-work-arrow spans.
+              text = re.sub(r'(<span\s+class="ny-work-arrow">)↓(</span>)', r'\1→\2', text)
+
+              # If works page uses the same arrow class, above handles it too.
+              if text != before:
+                  p.write_text(text, encoding='utf-8')
+                  print(filename, 'updated')
+              else:
+                  print(filename, 'no changes')
+          PY
+      - name: Commit changes and remove workflow
+        run: |
+          rm .github/workflows/rename-sections-arrows.yml
+          git config user.name "heydiana"
+          git config user.email "70851747+heydiana@users.noreply.github.com"
+          git add index.html works.html .github/workflows/rename-sections-arrows.yml
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "Rename portfolio sections and point arrows right"
+          git push
