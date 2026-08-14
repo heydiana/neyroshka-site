@@ -1,0 +1,33 @@
+name: Update photoset full images
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/photoset-show-full.yml']
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch photoset collage only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('works.html')
+          s=p.read_text(encoding='utf-8')
+
+          css='''\n/* PHOTOSHOOT collage: show full photos, no overlay or numbers */\n#nw #s01 .photoset-collage{grid-template-rows:repeat(2,250px)!important}\n#nw #s01 .photoset-collage .tile{background:#05070b!important}\n#nw #s01 .photoset-collage .tile img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;transform:none!important}\n#nw #s01 .photoset-collage .tile:hover img{transform:none!important}\n#nw #s01 .photoset-collage .tile:after{display:none!important;content:none!important}\n#nw #s01 .photoset-collage .tile .label{display:none!important}\n@media(max-width:760px){#nw #s01 .photoset-collage{grid-template-rows:repeat(3,230px)!important}}\n'''
+          if '/* PHOTOSHOOT collage: show full photos, no overlay or numbers */' not in s:
+              s=s.replace('</style>',css+'</style>',1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          rm .github/workflows/photoset-show-full.yml
+          git config user.name "heydiana"
+          git config user.email "70851747+heydiana@users.noreply.github.com"
+          git add works.html .github/workflows/photoset-show-full.yml
+          git commit -m "Show full photos in photoset collage"
+          git push
