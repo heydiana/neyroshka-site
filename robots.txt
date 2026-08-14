@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.neyroshka-ai.ru/sitemap.xml
