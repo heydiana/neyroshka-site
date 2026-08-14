@@ -440,8 +440,15 @@ body.nw-modal-open{overflow:hidden}
 #nw #s02 .product-collage{grid-template-rows:repeat(4,240px)!important}
 #nw #s05 .edu-collage{grid-auto-rows:393px!important}
 #nw #s06 .sticker-collage{grid-auto-rows:413px!important}
-#nw #s01 .photoset-collage{transform:scale(.79)!important;margin-bottom:-132px!important}
+#nw #s01 .photoset-collage{transform:none!important;margin:0 auto!important;max-width:1080px!important;grid-template-rows:repeat(2,245px)!important;margin-bottom:0!important}
 @media(max-width:1100px){#nw #s01 .story-collage,#nw #s02 .product-collage,#nw #s05 .edu-collage,#nw #s06 .sticker-collage{max-width:100%!important}}
+
+/* Align section text with the collages (2026-08-14) */
+#nw #s01>.w>.head,#nw #s01>.w>.subblock,
+#nw #s02>.w>.head,#nw #s02>.w>.sub,#nw #s02>.w>.copy,#nw #s02>.w>.fan-hint,#nw #s02>.w>.subblock,
+#nw #s05>.w>.head,#nw #s05>.w>.sub,#nw #s05>.w>.copy,#nw #s05>.w>.fan-hint,#nw #s05>.w>.subblock,
+#nw #s06>.w>.head,#nw #s06>.w>.sub,#nw #s06>.w>.copy,#nw #s06>.w>.fan-hint,#nw #s06>.w>.subblock{max-width:1080px!important;margin-left:auto!important;margin-right:auto!important}
+@media(max-width:1100px){#nw #s01>.w>.head,#nw #s01>.w>.subblock,#nw #s02>.w>.head,#nw #s02>.w>.sub,#nw #s02>.w>.copy,#nw #s02>.w>.fan-hint,#nw #s02>.w>.subblock,#nw #s05>.w>.head,#nw #s05>.w>.sub,#nw #s05>.w>.copy,#nw #s05>.w>.fan-hint,#nw #s05>.w>.subblock,#nw #s06>.w>.head,#nw #s06>.w>.sub,#nw #s06>.w>.copy,#nw #s06>.w>.fan-hint,#nw #s06>.w>.subblock{max-width:100%!important}#nw #s01 .photoset-collage{max-width:100%!important}}
 </style> <script>
 window.__sourcePhotos=['images/ai-photo/source/photo_2026-04-27_00-14-44.jpg','images/ai-photo/source/photo_2026-04-27_00-14-39.jpg','images/ai-photo/source/photo_2026-04-27_00-14-24.jpg'];
 window.__sourcePhotos.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=u;document.head.appendChild(l)});
