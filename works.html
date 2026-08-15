@@ -554,8 +554,8 @@ body.nw-modal-open{overflow:hidden}
 @media(max-width:760px){
 /* implicit rows so a collapsed grid does not leave empty space */
 #nw #s01 .story-collage,#nw #s02 .product-collage{grid-template-rows:none!important;grid-auto-rows:230px!important}
-#nw .collage-collapsed .tile{display:none!important}
-#nw .collage-collapsed .tile:nth-child(-n+6){display:block!important}
+#nw #s01 .story-collage.collage-collapsed .tile,#nw #s02 .product-collage.collage-collapsed .tile,#nw #s02 .cards-collage.collage-collapsed .tile,#nw #s05 .edu-collage.collage-collapsed .tile{display:none!important}
+#nw #s01 .story-collage.collage-collapsed .tile:nth-child(-n+6),#nw #s02 .product-collage.collage-collapsed .tile:nth-child(-n+6),#nw #s02 .cards-collage.collage-collapsed .tile:nth-child(-n+6),#nw #s05 .edu-collage.collage-collapsed .tile:nth-child(-n+6){display:block!important}
 #nw .collage-more{display:block;width:100%;max-width:340px;margin:14px auto 0;padding:14px 18px;background:transparent;color:var(--cream);border:1px solid var(--line);border-radius:999px;font:600 12px 'DM Mono',monospace;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 #nw .collage-more:active{background:rgba(157,188,224,.1)}
 }
@@ -1042,8 +1042,8 @@ document.addEventListener('DOMContentLoaded',function(){
   var mq=window.matchMedia('(max-width:760px)');
   grids.forEach(function(g){
     var tiles=g.querySelectorAll('.tile');
-    if(tiles.length<=LIMIT)return;
     var hidden=tiles.length-LIMIT;
+    if(hidden<3)return;
     var btn=document.createElement('button');
     btn.type='button';
     btn.className='collage-more';
