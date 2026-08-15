@@ -496,6 +496,24 @@ body.nw-modal-open{overflow:hidden}
 /* disclaimer: single centred line (2026-08-14) */
 #nw .price-disclaimer{max-width:none!important;width:100%!important;margin:0!important;text-align:center!important;white-space:nowrap!important;font-size:clamp(9px,0.86vw,12px)!important;padding-top:14px!important}
 @media(max-width:900px){#nw .price-disclaimer{white-space:normal!important;font-size:11px!important;text-align:center!important}}
+
+/* MOBILE FIXES 2026-08-15 */
+@media(max-width:760px){
+/* price switches: full-width stack instead of a cut-off pill */
+#nw .calc-tabs{flex-direction:column;flex-wrap:nowrap;width:100%;max-width:100%;border-radius:20px;padding:6px;gap:2px;margin-bottom:28px}
+#nw .calc-tabs button{width:100%;padding:13px 12px;font-size:11px;white-space:normal;border-radius:16px}
+#nw .calc-price{margin-top:4px}
+/* video playlist: no dead vertical space */
+#nw .filmstrip{height:auto!important;align-items:stretch;padding:0 0 10px;gap:10px}
+#nw .film-item{flex:0 0 200px!important}
+/* photoset collage: 5 photos without an empty cell */
+#nw #s01 .photoset-collage .tile:nth-child(1){grid-column:1/3!important}
+#nw #s01 .photoset-collage{grid-template-rows:repeat(3,210px)!important}
+/* source/result labels must not sit on the photos */
+#nw #s01 .s01-split{gap:48px!important;margin-top:46px!important}
+/* sticker sheets: less empty padding around them */
+#nw #s06 .sticker-collage{grid-auto-rows:210px!important}
+}
 </style> <script>
 window.__sourcePhotos=['images/ai-photo/source/photo_2026-04-27_00-14-44.jpg','images/ai-photo/source/photo_2026-04-27_00-14-39.jpg','images/ai-photo/source/photo_2026-04-27_00-14-24.jpg'];
 window.__sourcePhotos.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=u;document.head.appendChild(l)});
