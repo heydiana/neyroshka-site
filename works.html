@@ -516,6 +516,9 @@ body.nw-modal-open{overflow:hidden}
 /* sticker sheets: less empty padding around them */
 #nw #s06 .sticker-collage{grid-auto-rows:210px!important}
 }
+
+/* mobile: keep the face in the wide photoset frame 2026-08-15 */
+@media(max-width:760px){#nw #s01 .photoset-collage .tile:nth-child(1) img{object-position:center 7%!important}}
 </style> <script>
 window.__sourcePhotos=['images/ai-photo/source/photo_2026-04-27_00-14-44.jpg','images/ai-photo/source/photo_2026-04-27_00-14-39.jpg','images/ai-photo/source/photo_2026-04-27_00-14-24.jpg'];
 window.__sourcePhotos.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=u;document.head.appendChild(l)});
