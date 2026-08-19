@@ -1,0 +1,84 @@
+name: Fix scroll restore
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-scroll-restore.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch preserve-scroll script
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('works.html')
+          s=p.read_text(encoding='utf-8')
+          start=s.index('<script id="preserve-scroll-on-reload">')
+          end=s.index('</script>',start)+len('</script>')
+          new=r'''<script id="preserve-scroll-on-reload">
+(function(){
+  var key='neyroshka:works:scrollY';
+  var pathKey='neyroshka:works:path';
+  try{history.scrollRestoration='manual';}catch(e){}
+  function pos(){return window.scrollY||window.pageYOffset||0}
+  function jump(y){
+    try{window.scrollTo({top:y,left:0,behavior:'auto'});}catch(e){window.scrollTo(0,y);}
+  }
+  function save(){
+    try{
+      sessionStorage.setItem(key,String(pos()));
+      sessionStorage.setItem(pathKey,location.pathname+location.search);
+    }catch(e){}
+  }
+  var restored=false;
+  function restore(){
+    if(restored)return;
+    restored=true;
+    var samePage=false,y=null;
+    try{
+      samePage=sessionStorage.getItem(pathKey)===(location.pathname+location.search);
+      y=sessionStorage.getItem(key);
+    }catch(e){}
+    if(samePage&&y!==null){
+      var target=parseFloat(y)||0;
+      jump(target);
+      requestAnimationFrame(function(){jump(target)});
+      setTimeout(function(){jump(target)},120);
+      return;
+    }
+    if(location.hash){
+      var el=null;
+      try{el=document.querySelector(location.hash)}catch(e){}
+      if(el){
+        var go=function(){jump(el.getBoundingClientRect().top+pos()-20)};
+        go();requestAnimationFrame(go);setTimeout(go,120);
+      }
+    }
+  }
+  var ticking=false;
+  window.addEventListener('scroll',function(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){ticking=false;save()});
+  },{passive:true});
+  window.addEventListener('pagehide',save);
+  window.addEventListener('beforeunload',save);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',restore,{once:true});
+  else restore();
+  window.addEventListener('load',restore,{once:true});
+  window.addEventListener('pageshow',restore,{once:true});
+})();
+</script>'''
+          p.write_text(s[:start]+new+s[end:],encoding='utf-8')
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add works.html
+          git diff --cached --check
+          git commit -m "Keep exact scroll position after reload"
+          git push
