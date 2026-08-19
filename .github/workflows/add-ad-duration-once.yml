@@ -1,0 +1,32 @@
+name: Add ad duration once
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/add-ad-duration-once.yml']
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add duration only
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('works.html')
+          s=p.read_text(encoding='utf-8')
+          old='<span class="film-meta"><strong>РЕКЛАМА — 01</strong></span>'
+          new='<span class="film-meta"><strong>РЕКЛАМА — 01</strong><small>0:50</small></span>'
+          assert s.count(old)==1
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+      - name: Commit
+        run: |
+          rm .github/workflows/add-ad-duration-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add works.html .github/workflows/add-ad-duration-once.yml
+          git diff --cached --check
+          git commit -m "Show duration for new ad video"
+          git push
