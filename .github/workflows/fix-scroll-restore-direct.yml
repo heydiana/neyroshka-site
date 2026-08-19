@@ -1,0 +1,74 @@
+name: Fix exact scroll restore on reload
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-scroll-restore-direct.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace scroll restore logic
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('works.html')
+          s=p.read_text(encoding='utf-8')
+          start=s.index('<script id="preserve-scroll-on-reload">')
+          end=s.index('</script>', start)+len('</script>')
+          new='''<script id="preserve-scroll-on-reload">
+(function(){
+  var key='neyroshka:works:scrollY';
+  try{history.scrollRestoration='manual';}catch(e){}
+
+  function pos(){return window.scrollY||window.pageYOffset||0}
+  function jump(y){
+    try{window.scrollTo({top:y,left:0,behavior:'auto'});}catch(e){window.scrollTo(0,y);}
+  }
+  function save(){
+    try{sessionStorage.setItem(key,String(pos()));}catch(e){}
+  }
+
+  var navEntry=null;
+  try{navEntry=performance.getEntriesByType('navigation')[0]||null;}catch(e){}
+  var isReload=navEntry?navEntry.type==='reload':(performance.navigation&&performance.navigation.type===1);
+
+  if(isReload){
+    var savedHash=location.hash;
+    var savedY=null;
+    try{
+      var raw=sessionStorage.getItem(key);
+      if(raw!==null)savedY=parseFloat(raw);
+    }catch(e){}
+
+    if(Number.isFinite(savedY)){
+      if(savedHash){
+        try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+      }
+      jump(savedY);
+      requestAnimationFrame(function(){
+        jump(savedY);
+        if(savedHash){
+          try{history.replaceState(null,'',location.pathname+location.search+savedHash);}catch(e){}
+        }
+      });
+    }
+  }
+
+  window.addEventListener('pagehide',save);
+  window.addEventListener('beforeunload',save);
+})();
+</script>'''
+          s=s[:start]+new+s[end:]
+          p.write_text(s,encoding='utf-8')
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add works.html
+          git diff --cached --check
+          git commit -m "Keep exact scroll position after reload"
+          git push
