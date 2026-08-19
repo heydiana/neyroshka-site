@@ -59,3 +59,4 @@ jobs:
           git diff --cached --check
           git commit -m "Keep exact scroll position on reload"
           git push
+# trigger
