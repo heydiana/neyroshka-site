@@ -1,0 +1,50 @@
+name: Fix motion switch
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/trigger-motion-switch.txt'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch video switching
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('works.html')
+          s=p.read_text(encoding='utf-8')
+          old="""    if(url){
+      mainVideo.src=url;mainVideo.style.display='block';mainThumb.style.display='none';
+    }else{
+      mainVideo.removeAttribute('src');mainVideo.style.display='none';mainThumb.style.display='block';
+    }
+"""
+          new="""    if(url){
+      mainVideo.src=url;
+      mainVideo.style.display='block';
+      mainThumb.style.display='none';
+      mainVideo.load();
+      const playPromise=mainVideo.play();
+      if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(()=>{});
+    }else{
+      mainVideo.removeAttribute('src');
+      mainVideo.load();
+      mainVideo.style.display='none';
+      mainThumb.style.display='block';
+    }
+"""
+          assert s.count(old)==1, s.count(old)
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+      - name: Commit fix
+        run: |
+          rm -f .github/trigger-motion-switch.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add works.html .github/trigger-motion-switch.txt
+          git diff --cached --check
+          git commit -m "Fix motion video switching"
+          git push
