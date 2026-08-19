@@ -24,6 +24,7 @@ jobs:
   var key='neyroshka:works:scrollY';
   var pathKey='neyroshka:works:path';
   try{history.scrollRestoration='manual';}catch(e){}
+
   function pos(){return window.scrollY||window.pageYOffset||0}
   function jump(y){
     try{window.scrollTo({top:y,left:0,behavior:'auto'});}catch(e){window.scrollTo(0,y);}
@@ -34,31 +35,35 @@ jobs:
       sessionStorage.setItem(pathKey,location.pathname+location.search);
     }catch(e){}
   }
-  var restored=false;
-  function restore(){
-    if(restored)return;
-    restored=true;
-    var samePage=false,y=null;
+
+  var navEntry=null;
+  try{navEntry=performance.getEntriesByType('navigation')[0]||null;}catch(e){}
+  var isReload=navEntry?navEntry.type==='reload':(performance.navigation&&performance.navigation.type===1);
+
+  if(isReload){
+    var samePage=false;
+    var target=null;
+    var savedHash=location.hash;
     try{
       samePage=sessionStorage.getItem(pathKey)===(location.pathname+location.search);
-      y=sessionStorage.getItem(key);
+      var raw=sessionStorage.getItem(key);
+      if(raw!==null)target=parseFloat(raw);
     }catch(e){}
-    if(samePage&&y!==null){
-      var target=parseFloat(y)||0;
-      jump(target);
-      requestAnimationFrame(function(){jump(target)});
-      setTimeout(function(){jump(target)},120);
-      return;
-    }
-    if(location.hash){
-      var el=null;
-      try{el=document.querySelector(location.hash)}catch(e){}
-      if(el){
-        var go=function(){jump(el.getBoundingClientRect().top+pos()-20)};
-        go();requestAnimationFrame(go);setTimeout(go,120);
+
+    if(samePage&&Number.isFinite(target)){
+      if(savedHash){
+        try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
       }
+      jump(target);
+      requestAnimationFrame(function(){
+        jump(target);
+        if(savedHash){
+          try{history.replaceState(null,'',location.pathname+location.search+savedHash);}catch(e){}
+        }
+      });
     }
   }
+
   var ticking=false;
   window.addEventListener('scroll',function(){
     if(ticking)return;
@@ -67,10 +72,6 @@ jobs:
   },{passive:true});
   window.addEventListener('pagehide',save);
   window.addEventListener('beforeunload',save);
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',restore,{once:true});
-  else restore();
-  window.addEventListener('load',restore,{once:true});
-  window.addEventListener('pageshow',restore,{once:true});
 })();
 </script>'''
           p.write_text(s[:start]+new+s[end:],encoding='utf-8')
@@ -82,3 +83,4 @@ jobs:
           git diff --cached --check
           git commit -m "Keep exact scroll position after reload"
           git push
+# run now
