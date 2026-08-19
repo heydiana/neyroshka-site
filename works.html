@@ -846,7 +846,7 @@ root.querySelectorAll('.video-showcase').forEach(showcase=>{
     if(mainThumbImg&&itemImg)mainThumbImg.src=itemImg.src;
     mainVideo.pause();
     if(url){
-      mainVideo.src=url;mainVideo.style.display='block';mainThumb.style.display='none';
+      mainVideo.src=url;mainVideo.poster=itemImg?itemImg.src:'';mainVideo.load();mainVideo.style.display='block';mainThumb.style.display='none';const pp=mainVideo.play();if(pp&&pp.catch)pp.catch(()=>{});
     }else{
       mainVideo.removeAttribute('src');mainVideo.style.display='none';mainThumb.style.display='block';
     }
