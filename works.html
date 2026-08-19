@@ -35,6 +35,23 @@
 {"@type":"Offer","itemOffered":{"@type":"Service","name":"Стикеры для Telegram"},"price":"2500","priceCurrency":"RUB","url":"https://www.neyroshka-ai.ru/works#s06"}]}}
 </script>
 <script>if(location.pathname.endsWith("/works.html")){try{history.replaceState(null,"",location.pathname.slice(0,-5)+location.search+location.hash)}catch(e){}}</script>
+<script id="early-scroll-restore">
+(function(){
+  try{
+    history.scrollRestoration='manual';
+    var nav=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
+    var isReload=nav?nav.type==='reload':(performance.navigation&&performance.navigation.type===1);
+    if(!isReload)return;
+    var raw=sessionStorage.getItem('neyroshka:works:scrollY');
+    if(raw===null)return;
+    var y=parseFloat(raw);
+    if(!Number.isFinite(y))return;
+    window.__nyReloadScrollY=y;
+    window.__nyReloadHash=location.hash;
+    if(location.hash)history.replaceState(null,'',location.pathname+location.search);
+  }catch(e){}
+})();
+</script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -190,7 +207,6 @@ html{scroll-behavior:smooth}
 #nw .fan-modal__hint{position:absolute;left:0;right:0;bottom:24px;margin:0;text-align:center;color:rgba(220,233,246,.43);font:500 11px 'DM Mono',monospace;letter-spacing:.10em}
 body.nw-modal-open{overflow:hidden}
 @media(max-width:760px){#nw .fan-section{min-height:auto;padding-top:32px}#nw .fan-title{grid-template-columns:1fr;gap:20px}#nw .fan-tabs{top:auto;position:relative;left:auto;transform:none;margin:20px auto 0;width:max-content}#nw .fan-deck{transform:scale(.70);transform-origin:top center;margin:30px auto -62px}#nw .fan-modal{padding:52px 16px}#nw .fan-modal__card{width:min(690px,92vw);height:74vh;min-height:430px}#nw .fan-modal__close{right:18px;top:18px;width:54px;height:54px}}
-
 
 /* photos in the fan */
 #nw .fan-deck .card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.04);transition:transform .55s;z-index:0}
@@ -513,26 +529,18 @@ body.nw-modal-open{overflow:hidden}
 
 /* MOBILE FIXES 2026-08-15 */
 @media(max-width:760px){
-/* price switches: full-width stack instead of a cut-off pill */
 #nw .calc-tabs{flex-direction:column;flex-wrap:nowrap;width:100%;max-width:100%;border-radius:20px;padding:6px;gap:2px;margin-bottom:28px}
 #nw .calc-tabs button{width:100%;padding:13px 12px;font-size:11px;white-space:normal;border-radius:16px}
 #nw .calc-price{margin-top:4px}
-/* video playlist: no dead vertical space */
 #nw .filmstrip{height:auto!important;align-items:stretch;padding:0 0 10px;gap:10px}
 #nw .film-item{flex:0 0 200px!important}
-/* photoset collage: 5 photos without an empty cell */
 #nw #s01 .photoset-collage .tile:nth-child(1){grid-column:1/3!important}
 #nw #s01 .photoset-collage{grid-template-rows:repeat(3,210px)!important}
-/* source/result labels must not sit on the photos */
 #nw #s01 .s01-split{gap:48px!important;margin-top:46px!important}
-/* sticker sheets: less empty padding around them */
 #nw #s06 .sticker-collage{grid-auto-rows:210px!important}
 }
-
-/* mobile: keep the face in the wide photoset frame 2026-08-15 */
 @media(max-width:760px){#nw #s01 .photoset-collage .tile:nth-child(1) img{object-position:center 7%!important}}
 
-/* mobile burger menu 2026-08-15 */
 #nw .nav-burger{display:none;width:44px;height:44px;border:1px solid var(--line);background:transparent;border-radius:10px;padding:0;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;flex:0 0 auto}
 #nw .nav-burger span{display:block;width:19px;height:2px;background:var(--cream);transition:transform .28s,opacity .2s}
 @media(max-width:760px){
@@ -549,10 +557,8 @@ body.nw-modal-open{overflow:hidden}
 #nw .nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 }
 
-/* mobile: show the first photos, the rest behind a button 2026-08-15 */
 #nw .collage-more{display:none}
 @media(max-width:760px){
-/* implicit rows so a collapsed grid does not leave empty space */
 #nw #s01 .story-collage,#nw #s02 .product-collage{grid-template-rows:none!important;grid-auto-rows:230px!important}
 #nw #s01 .story-collage.collage-collapsed .tile,#nw #s02 .product-collage.collage-collapsed .tile,#nw #s02 .cards-collage.collage-collapsed .tile,#nw #s05 .edu-collage.collage-collapsed .tile{display:none!important}
 #nw #s01 .story-collage.collage-collapsed .tile:nth-child(-n+6),#nw #s02 .product-collage.collage-collapsed .tile:nth-child(-n+6),#nw #s02 .cards-collage.collage-collapsed .tile:nth-child(-n+6),#nw #s05 .edu-collage.collage-collapsed .tile:nth-child(-n+6){display:block!important}
@@ -652,14 +658,12 @@ const closeModal=()=>{
   resets.forEach(r=>r());
 };
 
-// веер (fan-deck)
 const deck=root.querySelector('.fan-deck');
 const cards=deck?[...deck.querySelectorAll('.card')]:[];
 const resultPhotos=["images/ai-photo/result/c31164b0-81f3-42ac-8de9-b639ea5baf82.png","images/ai-photo/result/325dd2bf-885d-445a-88d5-8321314afc06.png","images/ai-photo/result/6c0ce960-033d-47a2-ada8-1a730858d528.png","images/ai-photo/result/f00bdb86-a459-4370-89db-e10119255be1.png","images/ai-photo/result/bec5e3fd-6d89-4197-970e-e4ba0bbaad08.png"];
 const sourcePhotos=window.__sourcePhotos||["https://static.tildacdn.ink/tild3262-3836-4339-a365-653264343338/photo_2026-04-27_00-.jpg","https://static.tildacdn.ink/tild6636-6262-4737-b063-653336393830/photo_2026-04-27_00-.jpg","https://static.tildacdn.ink/tild6462-6363-4235-a632-646632366666/photo_2026-04-27_00-.jpg"];
 const resultLabels=["ЛЕТНЯЯ СЕРИЯ — 01","ЛЕТНЯЯ СЕРИЯ — 02","ЛЕТНЯЯ СЕРИЯ — 03","ЛЕТНЯЯ СЕРИЯ — 04","ЛЕТНЯЯ СЕРИЯ — 05"];
 const sourceLabels=["ИСХОДНИК — 01","ИСХОДНИК — 02","ИСХОДНИК — 03"];
-
 let mode='result';
 let activeCard=null;
 const caption=root.querySelector('#fanCaption');
@@ -696,7 +700,6 @@ root.querySelectorAll('[data-mode]').forEach(btn=>btn.addEventListener('click',(
 }));
 if(deck)renderDeck();
 
-// горизонтальные ленты (rail) — та же механика, что у веера
 root.querySelectorAll('.rail').forEach(rail=>{
   const tiles=[...rail.querySelectorAll('.tile')];
   let activeTile=null;
@@ -717,7 +720,6 @@ root.querySelectorAll('.rail').forEach(rail=>{
   });
 });
 
-// фотогалерея карточки «03 / ФОТОСЕССИЯ» — обложка + присланные фото, стрелки листают и в превью, и в лайтбоксе
 const stepGallery=(()=>{
   const el=root.querySelector('.ny-step__gallery');
   if(!el)return null;
@@ -731,58 +733,35 @@ const stepGallery=(()=>{
     cardImg.src=photos[index];cardImg.alt=alt;
     if(modalImg){modalImg.src=photos[index];modalImg.alt=alt}
   };
-  const api={
-    go:dir=>{index=(index+dir+photos.length)%photos.length;render()},
-    setModalImg:img=>{modalImg=img}
-  };
+  const api={go:dir=>{index=(index+dir+photos.length)%photos.length;render()},setModalImg:img=>{modalImg=img}};
   el.querySelector('.ny-step__arrow--prev').addEventListener('click',e=>{e.stopPropagation();api.go(-1)});
   el.querySelector('.ny-step__arrow--next').addEventListener('click',e=>{e.stopPropagation();api.go(1)});
   return {el,api};
 })();
 
-// видео-галерея карточки «04 / ВИДЕО» — стрелки листают видео (реальный первый кадр каждого) и фото-превью, как в карточке «03»
 const stepVideoGallery=(()=>{
   const el=root.querySelector('.ny-step__video-gallery');
   if(!el)return null;
-  const items=[
-    {type:'photo',url:"images/process/4.png"},
-    {type:'video',url:"https://res.cloudinary.com/on8gjsd6/video/upload/v1786198472/0806_krwljy.mp4"},
-    {type:'video',url:"https://res.cloudinary.com/on8gjsd6/video/upload/v1786198455/0808_kxkekp.mp4"}
-  ];
+  const items=[{type:'photo',url:"images/process/4.png"},{type:'video',url:"https://res.cloudinary.com/on8gjsd6/video/upload/v1786198472/0806_krwljy.mp4"},{type:'video',url:"https://res.cloudinary.com/on8gjsd6/video/upload/v1786198455/0808_kxkekp.mp4"}];
   const mediaEls=[...el.querySelectorAll('video,img')];
-  mediaEls.forEach(node=>{
-    if(node.tagName==='VIDEO'){
-      node.addEventListener('loadedmetadata',()=>{try{node.currentTime=0.1}catch(err){}},{once:true});
-    }
-  });
+  mediaEls.forEach(node=>{if(node.tagName==='VIDEO'){node.addEventListener('loadedmetadata',()=>{try{node.currentTime=0.1}catch(err){}},{once:true});}});
   const playIcon=el.querySelector('.ny-step__play');
   let index=0;
-  const renderCard=()=>{
-    mediaEls.forEach((node,i)=>{node.style.display=i===index?'':'none'});
-    if(playIcon)playIcon.style.display=items[index].type==='video'?'':'none';
-  };
-  const api={
-    mediaType:()=>items[index].type,
-    current:()=>items[index].url,
-    go:dir=>{index=(index+dir+items.length)%items.length;renderCard()}
-  };
+  const renderCard=()=>{mediaEls.forEach((node,i)=>{node.style.display=i===index?'':'none'});if(playIcon)playIcon.style.display=items[index].type==='video'?'':'none';};
+  const api={mediaType:()=>items[index].type,current:()=>items[index].url,go:dir=>{index=(index+dir+items.length)%items.length;renderCard()}};
   el.querySelector('.ny-step__arrow--prev').addEventListener('click',e=>{e.stopPropagation();api.go(-1)});
   el.querySelector('.ny-step__arrow--next').addEventListener('click',e=>{e.stopPropagation();api.go(1)});
   renderCard();
   return {el,api};
 })();
 
-// карточки процесса (00 / PROCESS) — увеличение по клику через общий лайтбокс
 root.querySelectorAll('.ny-step').forEach(step=>{
   const paper=step.querySelector('.ny-step__paper');
   const title=step.querySelector('.ny-step__caption h3');
   const hasPhotoGallery=stepGallery&&paper.contains(stepGallery.el);
   const hasVideoGallery=stepVideoGallery&&paper.contains(stepVideoGallery.el);
   const galleryApi=hasPhotoGallery?stepGallery.api:(hasVideoGallery?stepVideoGallery.api:null);
-  paper.addEventListener('click',e=>{
-    e.stopPropagation();
-    openModal(paper,title?title.textContent:'',galleryApi);
-  });
+  paper.addEventListener('click',e=>{e.stopPropagation();openModal(paper,title?title.textContent:'',galleryApi);});
 });
 
 document.addEventListener('click',()=>{resets.forEach(r=>r())});
@@ -791,7 +770,6 @@ modalCard.addEventListener('click',closeModal);
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeModal()});
 
-// интерактивные калькуляторы цены (работает для любого количества таких блоков)
 root.querySelectorAll('.price-calc').forEach(calc=>{
   const tabs=[...calc.querySelectorAll('.calc-tabs button')];
   const priceEl=calc.querySelector('.calc-price strong');
@@ -799,16 +777,13 @@ root.querySelectorAll('.price-calc').forEach(calc=>{
   const perEl=calc.querySelector('.calc-per');
   const fromEl=calc.querySelector('.calc-from');
   tabs.forEach(btn=>btn.addEventListener('click',()=>{
-    tabs.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    priceEl.textContent=btn.dataset.price;
+    tabs.forEach(b=>b.classList.remove('active'));btn.classList.add('active');priceEl.textContent=btn.dataset.price;
     if(sufEl)sufEl.textContent=btn.dataset.suffix!==undefined?btn.dataset.suffix:'₽';
     if(fromEl)fromEl.style.display=/^\d/.test(btn.dataset.price)&&btn.dataset.suffix===undefined?'':'none';
     perEl.textContent=btn.dataset.per;
   }));
 });
 
-// видео-витрина (ЛУЧШИЕ РОЛИКИ)
 root.querySelectorAll('.video-showcase').forEach(showcase=>{
   const stage=showcase.querySelector('.video-stage');
   const mainBox=showcase.querySelector('.video-main');
@@ -816,253 +791,105 @@ root.querySelectorAll('.video-showcase').forEach(showcase=>{
   const mainThumbImg=mainThumb.querySelector('img');
   const mainVideo=mainBox.querySelector('video');
   const items=[...showcase.querySelectorAll('.film-item')];
-
-  const formatTime=sec=>{
-    if(!isFinite(sec))return'--:--';
-    const total=Math.round(sec);
-    const m=Math.floor(total/60);
-    const s=String(total%60).padStart(2,'0');
-    return m+':'+s;
-  };
-
   const fitBox=video=>{
     if(!video.videoWidth||!video.videoHeight)return;
-    const ratio=video.videoWidth/video.videoHeight;
-    const maxHeight=520;
-    const available=stage.clientWidth;
-    let h=maxHeight,w=h*ratio;
-    if(available>160&&w>available){w=available;h=w/ratio}
-    mainBox.style.width=w+'px';
-    mainBox.style.height=h+'px';
+    const ratio=video.videoWidth/video.videoHeight;const maxHeight=520;const available=stage.clientWidth;let h=maxHeight,w=h*ratio;
+    if(available>160&&w>available){w=available;h=w/ratio}mainBox.style.width=w+'px';mainBox.style.height=h+'px';
   };
-
-  // подгружаем реальную длительность каждого видео
-  // длительности проставлены в разметке — ничего не подгружаем заранее
-
   const setActive=item=>{
     items.forEach(i=>i.classList.toggle('active',i===item));
-    const url=item.dataset.video;
-    const itemImg=item.querySelector('.film-thumb img');
-    if(mainThumbImg&&itemImg)mainThumbImg.src=itemImg.src;
-    mainVideo.pause();
-    if(url){
-      mainVideo.src=url;mainVideo.poster=itemImg?itemImg.src:'';mainVideo.load();mainVideo.style.display='block';mainThumb.style.display='none';const pp=mainVideo.play();if(pp&&pp.catch)pp.catch(()=>{});
-    }else{
-      mainVideo.removeAttribute('src');mainVideo.style.display='none';mainThumb.style.display='block';
-    }
+    const url=item.dataset.video;const itemImg=item.querySelector('.film-thumb img');
+    if(mainThumbImg&&itemImg)mainThumbImg.src=itemImg.src;mainVideo.pause();
+    if(url){mainVideo.src=url;mainVideo.poster=itemImg?itemImg.src:'';mainVideo.load();mainVideo.style.display='block';mainThumb.style.display='none';const pp=mainVideo.play();if(pp&&pp.catch)pp.catch(()=>{});}
+    else{mainVideo.removeAttribute('src');mainVideo.style.display='none';mainThumb.style.display='block';}
   };
-  mainVideo.addEventListener('loadedmetadata',()=>fitBox(mainVideo));
-  window.addEventListener('resize',()=>fitBox(mainVideo));
-  items.forEach(item=>item.addEventListener('click',()=>setActive(item)));
+  mainVideo.addEventListener('loadedmetadata',()=>fitBox(mainVideo));window.addEventListener('resize',()=>fitBox(mainVideo));items.forEach(item=>item.addEventListener('click',()=>setActive(item)));
 });
 
-// кнопки-заголовки ("00 / PROCESS", "01 / PHOTOSHOOTS", "ЦЕНЫ" и т.п.) — делегирование клика на document; это не <a href>, поэтому сторонний скрипт Tilda не может перехватить клик раньше нас
 document.addEventListener('click',e=>{
-  const btn=e.target.closest('button.copy-link[data-target]');
-  if(!btn)return;
-  const id=btn.dataset.target;
-  const target=document.getElementById(id);
-  if(!target)return;
-  target.scrollIntoView({behavior:'smooth',block:'start'});
-  history.pushState(null,'','#'+id);
+  const btn=e.target.closest('button.copy-link[data-target]');if(!btn)return;const id=btn.dataset.target;const target=document.getElementById(id);if(!target)return;
+  target.scrollIntoView({behavior:'smooth',block:'start'});history.pushState(null,'','#'+id);
 });
 
-// смена адреса в строке браузера при прокрутке колесиком — в зависимости от того, какой раздел сейчас на экране
 const spyIds=['top','process','s01','s01-price','s02','s02-price','s03','s03-price','s04','s04-price','s05','s05-price','s06','s06-price'];
 let spyTicking=false;
 const updateSpy=()=>{
-  spyTicking=false;
-  const spyTargets=spyIds.map(id=>document.getElementById(id)).filter(Boolean);
-  let current=spyTargets[0];
-  spyTargets.forEach(el=>{
-    if(el.getBoundingClientRect().top-window.innerHeight*0.3<=0)current=el;
-  });
-  if(current&&('#'+current.id)!==location.hash){
-    history.replaceState(null,'','#'+current.id);
-  }
+  spyTicking=false;const spyTargets=spyIds.map(id=>document.getElementById(id)).filter(Boolean);let current=spyTargets[0];
+  spyTargets.forEach(el=>{if(el.getBoundingClientRect().top-window.innerHeight*0.3<=0)current=el;});
+  if(current&&('#'+current.id)!==location.hash){history.replaceState(null,'','#'+current.id);}
 };
-window.addEventListener('scroll',()=>{
-  if(!spyTicking){spyTicking=true;requestAnimationFrame(updateSpy)}
-},{passive:true});
+window.addEventListener('scroll',()=>{if(!spyTicking){spyTicking=true;requestAnimationFrame(updateSpy)}},{passive:true});
 
-// кнопки прокрутки вверх/вниз справа — переключаются по тому, в какой половине страницы находится человек
-const scrollFabDown=root.querySelector('#scrollFabDown');
-const scrollFabUp=root.querySelector('#scrollFabUp');
-const updateScrollFabs=()=>{
-  const max=document.documentElement.scrollHeight-window.innerHeight;
-  const half=max/2;
-  const y=window.scrollY;
-  scrollFabDown.classList.toggle('visible',y<half);
-  scrollFabUp.classList.toggle('visible',y>=half);
-};
+const scrollFabDown=root.querySelector('#scrollFabDown');const scrollFabUp=root.querySelector('#scrollFabUp');
+const updateScrollFabs=()=>{const max=document.documentElement.scrollHeight-window.innerHeight;const half=max/2;const y=window.scrollY;scrollFabDown.classList.toggle('visible',y<half);scrollFabUp.classList.toggle('visible',y>=half);};
 scrollFabDown.addEventListener('click',()=>window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'}));
 scrollFabUp.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-window.addEventListener('scroll',updateScrollFabs,{passive:true});
-window.addEventListener('resize',updateScrollFabs);
-updateScrollFabs();
+window.addEventListener('scroll',updateScrollFabs,{passive:true});window.addEventListener('resize',updateScrollFabs);updateScrollFabs();
 })();
 </script> 
 
-
 <script id="s01-lightbox-script">
 document.addEventListener('DOMContentLoaded',function(){
-  var box=document.createElement('div');
-  box.id='s01-lightbox';
-  box.setAttribute('aria-hidden','true');
-  box.innerHTML='<img alt="">';
-  document.body.appendChild(box);
-  var full=box.querySelector('img');
-  document.querySelectorAll('#s01 .s01-card img').forEach(function(img){
-    img.parentElement.addEventListener('click',function(e){
-      e.preventDefault();
-      full.src=img.src;
-      full.alt=img.alt||'';
-      box.classList.add('open');
-      box.setAttribute('aria-hidden','false');
-    });
-  });
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Tab' && box.classList.contains('open')){
-      e.preventDefault();
-      box.classList.remove('open');
-      box.setAttribute('aria-hidden','true');
-      full.removeAttribute('src');
-    }
-  });
+  var box=document.createElement('div');box.id='s01-lightbox';box.setAttribute('aria-hidden','true');box.innerHTML='<img alt="">';document.body.appendChild(box);var full=box.querySelector('img');
+  document.querySelectorAll('#s01 .s01-card img').forEach(function(img){img.parentElement.addEventListener('click',function(e){e.preventDefault();full.src=img.src;full.alt=img.alt||'';box.classList.add('open');box.setAttribute('aria-hidden','false');});});
+  document.addEventListener('keydown',function(e){if(e.key==='Tab' && box.classList.contains('open')){e.preventDefault();box.classList.remove('open');box.setAttribute('aria-hidden','true');full.removeAttribute('src');}});
 });
 </script>
 
 <script id="photoset-lightbox-fix">
 document.addEventListener('DOMContentLoaded',function(){
-  var box=document.getElementById('s01-lightbox');
-  if(!box)return;
-  var full=box.querySelector('img');
-  function closeBox(){
-    box.classList.remove('open');
-    box.setAttribute('aria-hidden','true');
-    if(full)full.removeAttribute('src');
-  }
-  /* close by tapping/clicking anywhere on the overlay, including the enlarged photo */
+  var box=document.getElementById('s01-lightbox');if(!box)return;var full=box.querySelector('img');
+  function closeBox(){box.classList.remove('open');box.setAttribute('aria-hidden','true');if(full)full.removeAttribute('src');}
   box.addEventListener('click',function(){closeBox();});
-  /* make the six-photo collage open in the same fullscreen viewer */
-  document.querySelectorAll('#s01 .photoset-collage .tile img, #s01 .story-collage .tile img, #s02 .product-collage .tile img, #s02 .cards-collage .tile img, #s05 .edu-collage .tile img, #s06 .sticker-collage .tile img').forEach(function(img){
-    img.parentElement.addEventListener('click',function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      full.src=img.src;
-      full.alt=img.alt||'';
-      box.classList.add('open');
-      box.setAttribute('aria-hidden','false');
-    });
-  });
-  /* keep keyboard close as well */
-  document.addEventListener('keydown',function(e){
-    if((e.key==='Tab'||e.key==='Escape')&&box.classList.contains('open')){
-      e.preventDefault();
-      closeBox();
-    }
-  });
+  document.querySelectorAll('#s01 .photoset-collage .tile img, #s01 .story-collage .tile img, #s02 .product-collage .tile img, #s02 .cards-collage .tile img, #s05 .edu-collage .tile img, #s06 .sticker-collage .tile img').forEach(function(img){img.parentElement.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();full.src=img.src;full.alt=img.alt||'';box.classList.add('open');box.setAttribute('aria-hidden','false');});});
+  document.addEventListener('keydown',function(e){if((e.key==='Tab'||e.key==='Escape')&&box.classList.contains('open')){e.preventDefault();closeBox();}});
 });
 </script>
 
 <script id="preserve-scroll-on-reload">
 (function(){
   var key='neyroshka:works:scrollY';
-  try{history.scrollRestoration='manual';}catch(e){}
   function pos(){return window.scrollY||window.pageYOffset||0}
-  function jump(y){
-    try{window.scrollTo({top:y,left:0,behavior:'auto'});}catch(e){window.scrollTo(0,y);}
-  }
   function save(){try{sessionStorage.setItem(key,String(pos()));}catch(e){}}
-  function hashTarget(){
-    var h=location.hash;
-    if(!h||h.length<2)return null;
-    try{return document.querySelector(h);}catch(e){return null}
-  }
-  function goToHash(){
-    var el=hashTarget();
-    if(!el)return false;
-    var go=function(){jump(el.getBoundingClientRect().top+pos()-20)};
-    go();
-    requestAnimationFrame(go);
-    setTimeout(go,160);
-    setTimeout(go,450);
-    return true;
-  }
+  function jump(y){try{window.scrollTo({top:y,left:0,behavior:'auto'});}catch(e){window.scrollTo(0,y);}}
+  var restored=false;
   function restore(){
-    if(goToHash())return;
-    try{
-      var y=sessionStorage.getItem(key);
-      if(y===null)return;
-      var target=parseFloat(y)||0;
-      jump(target);
-      requestAnimationFrame(function(){jump(target)});
-      setTimeout(function(){jump(target)},120);
-    }catch(e){}
+    if(restored)return;
+    if(!Number.isFinite(window.__nyReloadScrollY))return;
+    restored=true;
+    var y=window.__nyReloadScrollY;
+    jump(y);
+    requestAnimationFrame(function(){
+      jump(y);
+      if(window.__nyReloadHash){
+        try{history.replaceState(null,'',location.pathname+location.search+window.__nyReloadHash);}catch(e){}
+      }
+    });
   }
+  var ticking=false;
+  window.addEventListener('scroll',function(){if(ticking)return;ticking=true;requestAnimationFrame(function(){ticking=false;save()});},{passive:true});
   window.addEventListener('pagehide',save);
   window.addEventListener('beforeunload',save);
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',restore,{once:true});
-  }else{
-    restore();
-  }
-  window.addEventListener('load',restore,{once:true});
-  window.addEventListener('pageshow',restore);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',restore,{once:true});else restore();
 })();
 </script>
 <script id="nav-burger-script">
 document.addEventListener('DOMContentLoaded',function(){
-  var b=document.getElementById('navBurger'), l=document.getElementById('navLinks');
-  if(!b||!l)return;
+  var b=document.getElementById('navBurger'), l=document.getElementById('navLinks');if(!b||!l)return;
   function close(){l.classList.remove('open');b.classList.remove('open');b.setAttribute('aria-expanded','false')}
-  b.addEventListener('click',function(e){
-    e.stopPropagation();
-    var open=l.classList.toggle('open');
-    b.classList.toggle('open',open);
-    b.setAttribute('aria-expanded',open?'true':'false');
-  });
-  l.addEventListener('click',function(e){ if(e.target.closest('a')) close(); });
-  document.addEventListener('click',function(e){ if(!e.target.closest('.nav')) close(); });
-  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  b.addEventListener('click',function(e){e.stopPropagation();var open=l.classList.toggle('open');b.classList.toggle('open',open);b.setAttribute('aria-expanded',open?'true':'false');});
+  l.addEventListener('click',function(e){ if(e.target.closest('a')) close(); });document.addEventListener('click',function(e){ if(!e.target.closest('.nav')) close(); });document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
 });
 </script>
 <script id="collage-more-script">
 document.addEventListener('DOMContentLoaded',function(){
-  var LIMIT=6;
-  var grids=document.querySelectorAll('.story-collage,.product-collage,.cards-collage,.edu-collage');
-  var mq=window.matchMedia('(max-width:760px)');
-  grids.forEach(function(g){
-    var tiles=g.querySelectorAll('.tile');
-    var hidden=tiles.length-LIMIT;
-    if(hidden<3)return;
-    var btn=document.createElement('button');
-    btn.type='button';
-    btn.className='collage-more';
-    btn.textContent='Показать ещё '+hidden+' '+(hidden%10===1&&hidden%100!==11?'фото':'фото');
-    g.parentNode.insertBefore(btn,g.nextSibling);
-    function collapse(){ if(mq.matches){g.classList.add('collage-collapsed');btn.style.display='';} else {g.classList.remove('collage-collapsed');btn.style.display='none';} }
-    collapse();
-    btn.addEventListener('click',function(){
-      g.classList.remove('collage-collapsed');
-      btn.remove();
-    });
-    if(mq.addEventListener)mq.addEventListener('change',collapse);
-  });
+  var LIMIT=6;var grids=document.querySelectorAll('.story-collage,.product-collage,.cards-collage,.edu-collage');var mq=window.matchMedia('(max-width:760px)');
+  grids.forEach(function(g){var tiles=g.querySelectorAll('.tile');var hidden=tiles.length-LIMIT;if(hidden<3)return;var btn=document.createElement('button');btn.type='button';btn.className='collage-more';btn.textContent='Показать ещё '+hidden+' '+(hidden%10===1&&hidden%100!==11?'фото':'фото');g.parentNode.insertBefore(btn,g.nextSibling);function collapse(){ if(mq.matches){g.classList.add('collage-collapsed');btn.style.display='';} else {g.classList.remove('collage-collapsed');btn.style.display='none';} }collapse();btn.addEventListener('click',function(){g.classList.remove('collage-collapsed');btn.remove();});if(mq.addEventListener)mq.addEventListener('change',collapse);});
 });
 </script>
 <script id="cookie-note">
 document.addEventListener('DOMContentLoaded',function(){
-  var KEY='ny-cookie-ok';
-  try{ if(localStorage.getItem(KEY))return; }catch(e){ return; }
-  var d=document.createElement('div');
-  d.id='cookieNote';
-  d.innerHTML='<span>Сайт использует cookie и собирает обезличенные данные для аналитики. <a href="/privacy">Подробнее</a>.</span><button type="button">Понятно</button>';
-  document.body.appendChild(d);
-  d.querySelector('button').addEventListener('click',function(){
-    try{localStorage.setItem(KEY,'1')}catch(e){}
-    d.remove();
-  });
+  var KEY='ny-cookie-ok';try{ if(localStorage.getItem(KEY))return; }catch(e){ return; }var d=document.createElement('div');d.id='cookieNote';d.innerHTML='<span>Сайт использует cookie и собирает обезличенные данные для аналитики. <a href="/privacy">Подробнее</a>.</span><button type="button">Понятно</button>';document.body.appendChild(d);d.querySelector('button').addEventListener('click',function(){try{localStorage.setItem(KEY,'1')}catch(e){}d.remove();});
 });
 </script>
 </body>
