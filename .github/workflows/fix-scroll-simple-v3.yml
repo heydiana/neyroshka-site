@@ -1,0 +1,61 @@
+name: Fix scroll restore simple v3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-scroll-simple-v3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch works.html
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('works.html')
+          s=p.read_text(encoding='utf-8')
+          old="""  function restore(){
+    if(goToHash())return;
+    try{
+      var y=sessionStorage.getItem(key);
+      if(y===null)return;
+      var target=parseFloat(y)||0;
+      jump(target);
+      requestAnimationFrame(function(){jump(target)});
+      setTimeout(function(){jump(target)},120);
+    }catch(e){}
+  }
+"""
+          new="""  function restore(){
+    try{
+      var y=sessionStorage.getItem(key);
+      if(y!==null){
+        var target=parseFloat(y)||0;
+        jump(target);
+        return;
+      }
+    }catch(e){}
+    if(goToHash())return;
+  }
+"""
+          if old not in s:
+              raise SystemExit('restore target not found')
+          s=s.replace(old,new,1)
+          s=s.replace("  window.addEventListener('load',restore,{once:true});\n",'',1)
+          s=s.replace("  window.addEventListener('pageshow',restore);\n",'',1)
+          p.write_text(s,encoding='utf-8')
+      - name: Commit fix
+        run: |
+          rm .github/workflows/fix-scroll-simple-v3.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add works.html .github/workflows/fix-scroll-simple-v3.yml
+          git diff --cached --check
+          git commit -m "Keep exact scroll position on reload"
+          git push
