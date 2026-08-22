@@ -874,5 +874,33 @@ document.addEventListener('DOMContentLoaded',function(){
   var KEY='ny-cookie-ok';try{ if(localStorage.getItem(KEY))return; }catch(e){ return; }var d=document.createElement('div');d.id='cookieNote';d.innerHTML='<span>Сайт использует cookie и собирает обезличенные данные для аналитики. <a href="/privacy">Подробнее</a>.</span><button type="button">Понятно</button>';document.body.appendChild(d);d.querySelector('button').addEventListener('click',function(){try{localStorage.setItem(KEY,'1')}catch(e){}d.remove();});
 });
 </script>
+<script id="testing-selectors">
+(function(){
+  var selector='a,button,video,input,select,textarea';
+  function init(){
+    var used=new Set(Array.from(document.querySelectorAll('[data-testid]')).map(function(el){return el.getAttribute('data-testid')}));
+    var counters=Object.create(null);
+    function clean(value){return String(value||'page').toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'')||'page'}
+    function assign(el){
+      if(!el||el.nodeType!==1||el.hasAttribute('data-testid'))return;
+      var context=el.closest('section[id],header[id],main[id],div[id]');
+      var base='auto-'+clean(context&&context.id)+'-'+el.tagName.toLowerCase();
+      counters[base]=(counters[base]||0)+1;
+      var id=base+'-'+String(counters[base]).padStart(2,'0');
+      while(used.has(id)){counters[base]++;id=base+'-'+String(counters[base]).padStart(2,'0')}
+      el.setAttribute('data-testid',id);used.add(id);
+    }
+    function scan(root){
+      if(root.matches&&root.matches(selector))assign(root);
+      if(root.querySelectorAll)root.querySelectorAll(selector).forEach(assign);
+    }
+    scan(document);
+    new MutationObserver(function(records){
+      records.forEach(function(record){record.addedNodes.forEach(function(node){if(node.nodeType===1)scan(node)})});
+    }).observe(document.documentElement,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 </body>
 </html>
