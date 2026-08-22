@@ -34,9 +34,9 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;font:500 12px 'DM Mo
 .note{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:30px;font-size:14px;color:var(--muted)}
 </style>
 </head>
-<body>
-<header><div class="w top"><a class="back" href="/">← На главную</a><span class="logo">NEYROSHKA_<b>AI</b></span></div></header>
-<main class="w">
+<body data-testid="privacy-page">
+<header><div class="w top"><a class="back" href="/" data-testid="privacy-home-link">← На главную</a><span class="logo">NEYROSHKA_<b>AI</b></span></div></header>
+<main class="w" data-testid="privacy-content">
 <h1>Политика конфиденциальности</h1>
 <div class="upd">Действует с 15 августа 2026 года</div>
 
@@ -74,7 +74,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;font:500 12px 'DM Mo
 <p>Политика может обновляться. Актуальная редакция всегда доступна по адресу neyroshka-ai.ru/privacy, дата вступления в силу указана вверху страницы.</p>
 
 <h2>8. Контакты</h2>
-<p>По любым вопросам об обработке данных: <a class="link" href="https://t.me/neyroshka_ai" target="_blank" rel="noopener">Telegram @neyroshka_ai</a>.</p>
+<p>По любым вопросам об обработке данных: <a class="link" data-testid="privacy-contact-telegram" href="https://t.me/neyroshka_ai" target="_blank" rel="noopener">Telegram @neyroshka_ai</a>.</p>
 
 <div class="note">Продолжая пользоваться сайтом, вы соглашаетесь со сбором обезличенных данных в описанном объёме.</div>
 </main>
