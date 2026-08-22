@@ -79,5 +79,33 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;font:500 12px 'DM Mo
 <div class="note">Продолжая пользоваться сайтом, вы соглашаетесь со сбором обезличенных данных в описанном объёме.</div>
 </main>
 <footer><div class="w">© 2026 NEYROSHKA_AI</div></footer>
+<script id="testing-selectors">
+(function(){
+  var selector='a,button,video,input,select,textarea';
+  function init(){
+    var used=new Set(Array.from(document.querySelectorAll('[data-testid]')).map(function(el){return el.getAttribute('data-testid')}));
+    var counters=Object.create(null);
+    function clean(value){return String(value||'page').toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'')||'page'}
+    function assign(el){
+      if(!el||el.nodeType!==1||el.hasAttribute('data-testid'))return;
+      var context=el.closest('section[id],header[id],main[id],div[id]');
+      var base='auto-'+clean(context&&context.id)+'-'+el.tagName.toLowerCase();
+      counters[base]=(counters[base]||0)+1;
+      var id=base+'-'+String(counters[base]).padStart(2,'0');
+      while(used.has(id)){counters[base]++;id=base+'-'+String(counters[base]).padStart(2,'0')}
+      el.setAttribute('data-testid',id);used.add(id);
+    }
+    function scan(root){
+      if(root.matches&&root.matches(selector))assign(root);
+      if(root.querySelectorAll)root.querySelectorAll(selector).forEach(assign);
+    }
+    scan(document);
+    new MutationObserver(function(records){
+      records.forEach(function(record){record.addedNodes.forEach(function(node){if(node.nodeType===1)scan(node)})});
+    }).observe(document.documentElement,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 </body>
 </html>
