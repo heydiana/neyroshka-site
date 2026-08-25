@@ -10,25 +10,355 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&family=Archivo:wght@300;400;500;600&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&display=swap">
 <style>
-:root{--coal:#080A0F;--coal-2:#0D1119;--coal-3:#141A24;--paper:#F2F5F9;--dim:#8792A2;--red:#E2342A;--ice:#A8C6E8;--line:rgba(242,245,249,.11);--line2:rgba(242,245,249,.06);--ease:cubic-bezier(.16,1,.3,1);--maxw:1240px}
-*{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--coal)}body{margin:0;background:radial-gradient(70% 60% at 82% 6%,rgba(168,198,232,.08),transparent 62%),radial-gradient(65% 55% at 12% 46%,rgba(226,52,42,.055),transparent 65%),var(--coal);color:var(--paper);font-family:"Archivo",system-ui,sans-serif;font-weight:300;line-height:1.65;overflow-x:hidden}a{color:inherit;text-decoration:none}img{display:block;max-width:100%}button,input,textarea{font:inherit}.shell{max-width:var(--maxw);margin:auto;padding:0 clamp(20px,5vw,64px)}section{position:relative;padding:clamp(90px,13vh,150px) 0}.tt{font-family:"Bodoni Moda",serif;font-weight:400;line-height:.98;letter-spacing:-.012em;margin:0;text-wrap:balance}h1.tt{font-size:clamp(44px,6.5vw,92px)}h2.tt{font-size:clamp(31px,4.6vw,64px)}h3.tt{font-size:clamp(21px,2.6vw,31px);line-height:1.06}.it{font-style:italic;color:var(--ice)}.tc{font-family:"Anonymous Pro",monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ice)}.dim{color:var(--dim)}.body-lg{font-size:clamp(16px,1.35vw,19px);color:var(--dim);max-width:58ch}p{margin:0}#grain{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.04;mix-blend-mode:screen}.vignette{position:fixed;inset:0;z-index:89;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 42%,rgba(0,0,0,.54) 100%)}header{position:fixed;top:0;left:0;right:0;z-index:70;display:flex;align-items:center;gap:30px;padding:22px clamp(20px,5vw,64px);border-bottom:1px solid transparent;transition:.45s var(--ease)}header.stuck{background:rgba(8,10,15,.84);backdrop-filter:blur(14px);padding-top:15px;padding-bottom:15px;border-color:var(--line2)}.logo{font-family:"Bodoni Moda",serif;font-size:19px;letter-spacing:.16em;text-transform:uppercase}.logo b{color:var(--red);font-weight:400}nav{margin-left:auto;display:flex;gap:24px}nav a{font-family:"Anonymous Pro",monospace;font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--dim)}nav a:hover{color:var(--paper)}@media(max-width:860px){nav{display:none}}.btn{display:inline-flex;align-items:center;gap:12px;padding:16px 28px;border:1px solid var(--line);font-family:"Anonymous Pro",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;position:relative;overflow:hidden;isolation:isolate}.btn:before{content:"";position:absolute;inset:0;z-index:-1;background:var(--red);transform:translateY(101%);transition:.5s var(--ease)}.btn:hover:before{transform:none}.btn.solid{background:var(--red);border-color:var(--red)}.btn.solid:before{background:var(--ice)}.hero{min-height:100svh;display:flex;align-items:center;padding-top:110px}.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(34px,5vw,78px);align-items:center}.hero h1{margin:24px 0 0}.hero .body-lg{margin-top:28px}.acts{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px}.hero-film{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.frame{position:relative;overflow:hidden;background:var(--coal-2);border:1px solid var(--line2)}.frame.big{aspect-ratio:3/4}.frame.small{aspect-ratio:1/1}.smallcol{display:flex;flex-direction:column;gap:12px}.frame img{width:100%;height:100%;object-fit:cover;filter:saturate(.88);transition:transform 1.1s var(--ease)}.frame:hover img{transform:scale(1.03)}.flabel{position:absolute;left:12px;bottom:12px;background:rgba(8,10,15,.58);padding:5px 8px;backdrop-filter:blur(7px);font-family:"Anonymous Pro",monospace;font-size:9px;letter-spacing:.14em;color:var(--ice)}.section-head{display:grid;grid-template-columns:1fr minmax(280px,390px);gap:50px;align-items:end;margin-bottom:48px}.section-head p{color:var(--dim)}.video-types{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}.vtype{padding:30px 24px 34px;border-right:1px solid var(--line2);min-height:330px}.vtype:last-child{border-right:0}.vtype .num{font-family:"Anonymous Pro",monospace;font-size:10px;letter-spacing:.2em;color:var(--red)}.vtype h3{margin:60px 0 12px}.vtype p{color:var(--dim);font-size:14.5px}.reel-head{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:38px}.track{display:flex;gap:22px;overflow-x:auto;padding-bottom:20px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:rgba(242,245,249,.2) transparent}.shot{flex:0 0 clamp(260px,27vw,340px);scroll-snap-align:start}.poster{position:relative;aspect-ratio:9/16;overflow:hidden;border:1px solid var(--line2);background:#0c1017}.poster img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease)}.shot:hover img{transform:scale(1.04)}.badge{position:absolute;left:14px;bottom:14px;background:rgba(8,10,15,.62);padding:5px 9px;font-family:"Anonymous Pro",monospace;font-size:10px;letter-spacing:.14em}.meta{padding-top:18px;border-top:1px solid var(--line);margin-top:18px}.meta h3{margin-bottom:12px}.meta p{color:var(--dim);font-size:14.5px}.meta strong{color:var(--paper);font-weight:500}.photo-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.photo-main,.photo-side{position:relative;overflow:hidden;border:1px solid var(--line2)}.photo-main{min-height:600px}.photo-side{min-height:290px}.photo-col{display:grid;gap:18px}.photo-grid img{width:100%;height:100%;object-fit:cover}.overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(8,10,15,.88))}.pcopy{position:absolute;left:22px;bottom:20px;right:22px}.pcopy h3{margin:0 0 8px}.pcopy p{color:#b4bdc8;font-size:14.5px}.proof{display:grid;grid-template-columns:1fr 1fr;gap:18px}.proofbox{border:1px solid var(--line);background:var(--coal-2);padding:14px}.proofcap{display:flex;justify-content:space-between;margin-bottom:12px}.placeholder{aspect-ratio:4/5;display:grid;place-items:center;text-align:center;padding:30px;background:linear-gradient(160deg,#101620,#090b10);color:var(--dim)}.proofbox img{width:100%;aspect-ratio:4/5;object-fit:cover}.process{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}.beat{padding:30px 24px;border-right:1px solid var(--line2)}.beat:last-child{border-right:0}.beat .n{font-family:"Bodoni Moda",serif;font-size:46px;color:rgba(242,245,249,.13)}.beat h3{margin:15px 0 10px}.beat p{color:var(--dim);font-size:14.5px}.tiers{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}.tier{padding:38px 30px;border-right:1px solid var(--line2);display:flex;flex-direction:column;gap:20px;min-height:380px}.tier:last-child{border-right:0}.pin{font-family:"Anonymous Pro",monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ice)}.amt{font-family:"Bodoni Moda",serif;font-size:clamp(32px,3.6vw,46px)}.tier ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;color:var(--dim);font-size:15px}.tier li{display:grid;grid-template-columns:auto 1fr;gap:10px}.tier li:before{content:"";width:14px;height:1px;background:var(--red);margin-top:12px}.tier .btn{margin-top:auto;justify-content:center}.faq{border-top:1px solid var(--line)}.faq details{border-bottom:1px solid var(--line2)}.faq summary{list-style:none;cursor:pointer;padding:26px 0;display:flex;justify-content:space-between;gap:20px;font-family:"Bodoni Moda",serif;font-size:clamp(20px,2vw,26px)}.faq summary::-webkit-details-marker{display:none}.faq summary span{font-family:"Anonymous Pro",monospace;color:var(--red)}.faq details p{padding:0 0 26px;color:var(--dim);max-width:72ch}.apply{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}form{display:flex;flex-direction:column;gap:22px}label{font-family:"Anonymous Pro",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}input,textarea{background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--paper);padding:10px 0;font-size:17px}textarea{min-height:110px;resize:vertical}input:focus,textarea:focus{outline:none;border-bottom-color:var(--ice)}footer{border-top:1px solid var(--line);padding:40px 0 50px}.frow{display:flex;gap:24px;flex-wrap:wrap;align-items:center;font-family:"Anonymous Pro",monospace;font-size:10.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}.sp{margin-left:auto}.rv{opacity:0;transform:translateY(24px);filter:blur(6px);transition:opacity .95s var(--ease),transform 1s var(--ease),filter 1s var(--ease)}.rv.in{opacity:1;transform:none;filter:blur(0)}@media(max-width:1000px){.hero-grid,.apply,.photo-grid{grid-template-columns:1fr}.video-types,.process,.tiers{grid-template-columns:1fr}.vtype,.beat,.tier{border-right:0;border-bottom:1px solid var(--line2)}.section-head{grid-template-columns:1fr;gap:18px}}@media(max-width:680px){.hero-film{grid-template-columns:1fr}.smallcol{display:grid;grid-template-columns:1fr 1fr}.proof{grid-template-columns:1fr}.acts{display:grid}.acts .btn{justify-content:center}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rv{opacity:1!important;transform:none!important;filter:none!important}#grain{display:none}*{transition:none!important}}
+:root{
+  --coal:#080A0F;--coal-2:#0D1119;--coal-3:#141A24;
+  --paper:#F2F5F9;--dim:#8792A2;
+  --red:#E2342A;--ice:#A8C6E8;
+  --line:rgba(242,245,249,.11);--line2:rgba(242,245,249,.06);
+  --ease:cubic-bezier(.16,1,.3,1);--maxw:1240px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--coal)}
+body{margin:0;background:
+  radial-gradient(70% 60% at 82% 6%,rgba(168,198,232,.08),transparent 62%),
+  radial-gradient(65% 55% at 12% 46%,rgba(226,52,42,.055),transparent 65%),
+  var(--coal);
+  color:var(--paper);font-family:"Archivo",system-ui,sans-serif;font-weight:300;line-height:1.65;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button,input,textarea{font:inherit}
+.shell{max-width:var(--maxw);margin:auto;padding:0 clamp(20px,5vw,64px)}
+section{position:relative;padding:clamp(90px,13vh,150px) 0}
+.tt{font-family:"Bodoni Moda",serif;font-weight:400;line-height:.98;letter-spacing:-.012em;margin:0;text-wrap:balance}
+h1.tt{font-size:clamp(44px,6.5vw,92px)}
+h2.tt{font-size:clamp(31px,4.6vw,64px)}
+h3.tt{font-size:clamp(21px,2.6vw,31px);line-height:1.06}
+.it{font-style:italic;color:var(--ice)}
+.tc{font-family:"Anonymous Pro",monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ice)}
+.dim{color:var(--dim)}
+.body-lg{font-size:clamp(16px,1.35vw,19px);color:var(--dim);max-width:58ch}
+p{margin:0}
+
+#grain{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.04;mix-blend-mode:screen}
+.vignette{position:fixed;inset:0;z-index:89;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 42%,rgba(0,0,0,.54) 100%)}
+
+header{position:fixed;top:0;left:0;right:0;z-index:70;display:flex;align-items:center;gap:30px;padding:22px clamp(20px,5vw,64px);border-bottom:1px solid transparent;transition:.45s var(--ease)}
+header.stuck{background:rgba(8,10,15,.84);backdrop-filter:blur(14px);padding-top:15px;padding-bottom:15px;border-color:var(--line2)}
+.logo{font-family:"Bodoni Moda",serif;font-size:19px;letter-spacing:.16em;text-transform:uppercase}.logo b{color:var(--red);font-weight:400}
+nav{margin-left:auto;display:flex;gap:24px}nav a{font-family:"Anonymous Pro",monospace;font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--dim)}
+nav a:hover{color:var(--paper)}
+@media(max-width:860px){nav{display:none}}
+
+.btn{display:inline-flex;align-items:center;gap:12px;padding:16px 28px;border:1px solid var(--line);font-family:"Anonymous Pro",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;position:relative;overflow:hidden;isolation:isolate}
+.btn:before{content:"";position:absolute;inset:0;z-index:-1;background:var(--red);transform:translateY(101%);transition:.5s var(--ease)}
+.btn:hover:before{transform:none}.btn.solid{background:var(--red);border-color:var(--red)}
+.btn.solid:before{background:var(--ice)}
+
+.hero{min-height:100svh;display:flex;align-items:center;padding-top:110px}
+.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(34px,5vw,78px);align-items:center}
+.hero h1{margin:24px 0 0}.hero .body-lg{margin-top:28px}.acts{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px}
+.hero-film{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+.frame{position:relative;overflow:hidden;background:var(--coal-2);border:1px solid var(--line2)}
+.frame.big{aspect-ratio:3/4}.frame.small{aspect-ratio:1/1}.smallcol{display:flex;flex-direction:column;gap:12px}
+.frame img{width:100%;height:100%;object-fit:cover;filter:saturate(.88);transition:transform 1.1s var(--ease)}
+.frame:hover img{transform:scale(1.03)}
+.flabel{position:absolute;left:12px;bottom:12px;background:rgba(8,10,15,.58);padding:5px 8px;backdrop-filter:blur(7px);font-family:"Anonymous Pro",monospace;font-size:9px;letter-spacing:.14em;color:var(--ice)}
+
+.section-head{display:grid;grid-template-columns:1fr minmax(280px,390px);gap:50px;align-items:end;margin-bottom:48px}
+.section-head p{color:var(--dim)}
+
+.video-types{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}
+.vtype{padding:30px 24px 34px;border-right:1px solid var(--line2);min-height:330px}
+.vtype:last-child{border-right:0}
+.vtype .num{font-family:"Anonymous Pro",monospace;font-size:10px;letter-spacing:.2em;color:var(--red)}
+.vtype h3{margin:60px 0 12px}
+.vtype p{color:var(--dim);font-size:14.5px}
+
+.reel-head{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:38px}
+.track{display:flex;gap:22px;overflow-x:auto;padding-bottom:20px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:rgba(242,245,249,.2) transparent}
+.shot{flex:0 0 clamp(260px,27vw,340px);scroll-snap-align:start}
+.poster{position:relative;aspect-ratio:9/16;overflow:hidden;border:1px solid var(--line2);background:#0c1017}
+.poster img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease)}
+.shot:hover img{transform:scale(1.04)}
+.badge{position:absolute;left:14px;bottom:14px;background:rgba(8,10,15,.62);padding:5px 9px;font-family:"Anonymous Pro",monospace;font-size:10px;letter-spacing:.14em}
+.meta{padding-top:18px;border-top:1px solid var(--line);margin-top:18px}.meta h3{margin-bottom:12px}.meta p{color:var(--dim);font-size:14.5px}.meta strong{color:var(--paper);font-weight:500}
+
+.photo-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.photo-main,.photo-side{position:relative;overflow:hidden;border:1px solid var(--line2)}
+.photo-main{min-height:600px}.photo-side{min-height:290px}
+.photo-col{display:grid;gap:18px}
+.photo-grid img{width:100%;height:100%;object-fit:cover}
+.overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(8,10,15,.88))}
+.pcopy{position:absolute;left:22px;bottom:20px;right:22px}.pcopy h3{margin:0 0 8px}.pcopy p{color:#b4bdc8;font-size:14.5px}
+
+.proof{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.proofbox{border:1px solid var(--line);background:var(--coal-2);padding:14px}
+.proofcap{display:flex;justify-content:space-between;margin-bottom:12px}
+.placeholder{aspect-ratio:4/5;display:grid;place-items:center;text-align:center;padding:30px;background:linear-gradient(160deg,#101620,#090b10);color:var(--dim)}
+.proofbox img{width:100%;aspect-ratio:4/5;object-fit:cover}
+
+.process{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}
+.beat{padding:30px 24px;border-right:1px solid var(--line2)}.beat:last-child{border-right:0}.beat .n{font-family:"Bodoni Moda",serif;font-size:46px;color:rgba(242,245,249,.13)}.beat h3{margin:15px 0 10px}.beat p{color:var(--dim);font-size:14.5px}
+
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.tier{padding:38px 30px;border-right:1px solid var(--line2);display:flex;flex-direction:column;gap:20px;min-height:380px}.tier:last-child{border-right:0}
+.pin{font-family:"Anonymous Pro",monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ice)}
+.amt{font-family:"Bodoni Moda",serif;font-size:clamp(32px,3.6vw,46px)}
+.tier ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;color:var(--dim);font-size:15px}
+.tier li{display:grid;grid-template-columns:auto 1fr;gap:10px}.tier li:before{content:"";width:14px;height:1px;background:var(--red);margin-top:12px}.tier .btn{margin-top:auto;justify-content:center}
+
+.faq{border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line2)}
+.faq summary{list-style:none;cursor:pointer;padding:26px 0;display:flex;justify-content:space-between;gap:20px;font-family:"Bodoni Moda",serif;font-size:clamp(20px,2vw,26px)}
+.faq summary::-webkit-details-marker{display:none}.faq summary span{font-family:"Anonymous Pro",monospace;color:var(--red)}.faq details p{padding:0 0 26px;color:var(--dim);max-width:72ch}
+
+.apply{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+form{display:flex;flex-direction:column;gap:22px}
+label{font-family:"Anonymous Pro",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+input,textarea{background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--paper);padding:10px 0;font-size:17px}textarea{min-height:110px;resize:vertical}
+input:focus,textarea:focus{outline:none;border-bottom-color:var(--ice)}
+footer{border-top:1px solid var(--line);padding:40px 0 50px}.frow{display:flex;gap:24px;flex-wrap:wrap;align-items:center;font-family:"Anonymous Pro",monospace;font-size:10.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}.sp{margin-left:auto}
+
+.rv{opacity:0;transform:translateY(24px);filter:blur(6px);transition:opacity .95s var(--ease),transform 1s var(--ease),filter 1s var(--ease)}.rv.in{opacity:1;transform:none;filter:blur(0)}
+
+@media(max-width:1000px){
+  .hero-grid,.apply,.photo-grid{grid-template-columns:1fr}
+  .video-types,.process,.tiers{grid-template-columns:1fr}
+  .vtype,.beat,.tier{border-right:0;border-bottom:1px solid var(--line2)}
+  .section-head{grid-template-columns:1fr;gap:18px}
+}
+@media(max-width:680px){
+  .hero-film{grid-template-columns:1fr}.smallcol{display:grid;grid-template-columns:1fr 1fr}
+  .proof{grid-template-columns:1fr}
+  .acts{display:grid}.acts .btn{justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}*.rv{opacity:1!important;transform:none!important;filter:none!important}
+  #grain{display:none}*{transition:none!important}
+}
 </style>
 </head>
 <body>
-<canvas id="grain" aria-hidden="true"></canvas><div class="vignette" aria-hidden="true"></div>
-<header id="hdr"><a class="logo" href="#top">Neyroshka<b>.</b></a><nav><a href="#video">Видео</a><a href="#works">Работы</a><a href="#photo">Фото</a><a href="#process">Процесс</a><a href="#prices">Цены</a></nav></header>
+<!-- preview trigger: redesign -->
+<canvas id="grain" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<header id="hdr">
+  <a class="logo" href="#top">Neyroshka<b>.</b></a>
+  <nav>
+    <a href="#video">Видео</a>
+    <a href="#works">Работы</a>
+    <a href="#photo">Фото</a>
+    <a href="#process">Процесс</a>
+    <a href="#prices">Цены</a>
+  </nav>
+</header>
+
 <main id="top">
-<section class="hero"><div class="shell"><div class="hero-grid"><div><span class="tc rv">AI video & photo</span><h1 class="tt rv">Подожди, это реально <span class="it">не снимали?</span></h1><p class="body-lg rv" style="margin-top:26px"><strong style="display:block;color:var(--paper);font-weight:400;margin-bottom:8px">Твоя идея. Без ограничений съёмочной площадки.</strong>AI-визуал, который позволяет воплощать образы и сцены без привязки к локации, команде и сложному продакшену — с вниманием к свету, композиции и кинематографичной подаче.</p><div class="acts rv"><a class="btn solid" href="#video">Смотреть видео →</a><a class="btn" href="#photo">AI-фото</a></div></div><div class="hero-film rv"><div class="frame big"><img src="https://www.neyroshka-ai.ru/images/home/0%20(4).png" alt="AI-видео"><span class="flabel">MOTION / 01</span></div><div class="smallcol"><div class="frame small"><img src="https://www.neyroshka-ai.ru/images/ai-photo/story/b98783af-203e-45a2-a49c-64dd21e7a30a.png" alt="AI-фото"><span class="flabel">PHOTO / 02</span></div><div class="frame small"><img src="https://www.neyroshka-ai.ru/images/home/0%20(2).png" alt="Фото товара"><span class="flabel">PRODUCT / 03</span></div></div></div></div></div></section>
-<section id="video"><div class="shell"><div class="section-head"><div><span class="tc dim rv">Главное направление</span><h2 class="tt rv" style="margin-top:22px">AI-видео.<br><span class="it">Не один жанр.</span></h2></div><p class="body-lg rv">Ролик подбирается под задачу, а не под один шаблон. Можно сделать рекламу, сюжет, стилизованную анимацию или видео с человеком — в одном визуальном уровне.</p></div><div class="video-types rv"><div class="vtype"><span class="num">01</span><h3 class="tt">Рекламные ролики</h3><p>Продукт, услуга, запуск, таргет, промо и тесты креативов.</p></div><div class="vtype"><span class="num">02</span><h3 class="tt">Сюжетные видео</h3><p>Атмосферные истории, имиджевые ролики и короткие сцены.</p></div><div class="vtype"><span class="num">03</span><h3 class="tt">Анимация</h3><p>Рисованные, мультяшные и стилизованные форматы, персонажи и заставки.</p></div><div class="vtype"><span class="num">04</span><h3 class="tt">С человеком</h3><p>Видео с лицом клиента, персонажем или созданной моделью.</p></div><div class="vtype"><span class="num">05</span><h3 class="tt">Fashion / beauty / product</h3><p>Визуальные кампании, продуктовый motion и рекламная эстетика.</p></div></div></div></section>
-<section id="works"><div class="shell"><div class="reel-head"><div><span class="tc dim rv">Selected motion</span><h2 class="tt rv" style="margin-top:22px">Видео, которые<br><span class="it">решают разные задачи</span></h2></div><p class="body-lg rv" style="max-width:38ch">Здесь лучше показывать не «жанр», а зачем создавался ролик и где он должен работать.</p></div><div class="track rv"><article class="shot"><div class="poster"><img src="https://www.neyroshka-ai.ru/images/home/0%20(4).png" alt=""><span class="badge">REELS · 9:16</span></div><div class="meta"><h3 class="tt">Ролик для запуска</h3><p><strong>Задача:</strong> создать визуальный повод остановить скролл.<br><strong>Формат:</strong> короткий vertical motion.</p></div></article><article class="shot"><div class="poster"><img src="https://www.neyroshka-ai.ru/images/ai-photo/story/b98783af-203e-45a2-a49c-64dd21e7a30a.png" alt=""><span class="badge">STORY · 9:16</span></div><div class="meta"><h3 class="tt">Сюжетное промо</h3><p><strong>Задача:</strong> передать настроение и образ без прямой продажи.<br><strong>Формат:</strong> cinematic story.</p></div></article><article class="shot"><div class="poster"><img src="https://www.neyroshka-ai.ru/images/home/0%20(2).png" alt=""><span class="badge">PRODUCT · 9:16</span></div><div class="meta"><h3 class="tt">Product motion</h3><p><strong>Задача:</strong> сделать продукт главным героем сцены.<br><strong>Формат:</strong> рекламный motion.</p></div></article></div></div></section>
-<section id="photo"><div class="shell"><div class="section-head"><div><span class="tc dim rv">Второе направление</span><h2 class="tt rv" style="margin-top:22px">AI-фото<br><span class="it">в том же мире</span></h2></div><p class="body-lg rv">Фото работает самостоятельно или как продолжение видео: портреты, fashion, товарные сцены, рекламные кадры и контент для соцсетей.</p></div><div class="photo-grid rv"><div class="photo-main"><img src="https://www.neyroshka-ai.ru/images/ai-photo/story/b98783af-203e-45a2-a49c-64dd21e7a30a.png" alt="AI-фотосессия"><div class="overlay"></div><div class="pcopy"><h3 class="tt">AI-фотосессии</h3><p>Личные образы, fashion, пары, экспертный контент.</p></div></div><div class="photo-col"><div class="photo-side"><img src="https://www.neyroshka-ai.ru/images/home/0%20(2).png" alt="Фото товара"><div class="overlay"></div><div class="pcopy"><h3 class="tt">Фото товара</h3><p>Предметные и рекламные сцены.</p></div></div><div class="photo-side"><img src="https://www.neyroshka-ai.ru/images/home/0%20(1).png" alt="Контент"><div class="overlay"></div><div class="pcopy"><h3 class="tt">Контент к видео</h3><p>Обложки и кадры в том же визуальном стиле.</p></div></div></div></div></div></section>
-<section><div class="shell"><div class="section-head"><div><span class="tc dim rv">До / после</span><h2 class="tt rv" style="margin-top:22px">Из исходника<br><span class="it">в готовый образ</span></h2></div><p class="body-lg rv">Этот блок лучше заполнять реальной парой «исходник → результат», чтобы сразу снимать вопрос о качестве исходных материалов.</p></div><div class="proof rv"><div class="proofbox"><div class="proofcap"><span class="tc">Исходник</span><span class="tc dim">до</span></div><div class="placeholder">Поставь сюда реальный исходник клиента из кейса</div></div><div class="proofbox"><div class="proofcap"><span class="tc">Результат</span><span class="tc dim">после</span></div><img src="https://www.neyroshka-ai.ru/images/ai-photo/story/b98783af-203e-45a2-a49c-64dd21e7a30a.png" alt=""></div></div></div></section>
-<section id="process"><div class="shell"><span class="tc dim rv">Как это работает</span><h2 class="tt rv" style="margin:22px 0 46px">Пять тактов</h2><div class="process rv"><div class="beat"><span class="n">01</span><h3 class="tt">Обсуждение</h3><p>Определяем задачу и формат.</p></div><div class="beat"><span class="n">02</span><h3 class="tt">Материалы</h3><p>Фото, продукт, исходники и референсы.</p></div><div class="beat"><span class="n">03</span><h3 class="tt">Концепция</h3><p>Стиль, свет, композиция. После согласования — 50% предоплата.</p></div><div class="beat"><span class="n">04</span><h3 class="tt">Создание</h3><p>Фото или видео. Два круга правок входят.</p></div><div class="beat"><span class="n">05</span><h3 class="tt">Результат</h3><p>Готовые материалы. Стандартный срок — 2–7 рабочих дней.</p></div></div></div></section>
-<section id="prices"><div class="shell"><div class="section-head"><div><span class="tc dim rv">Цены</span><h2 class="tt rv" style="margin-top:22px">Видео — главное.<br><span class="it">Фото — рядом.</span></h2></div><p class="body-lg rv">Точная стоимость зависит от объёма и сложности задачи и фиксируется до начала работы.</p></div><div class="tiers rv"><div class="tier"><span class="pin">01 / MOTION</span><h3 class="tt">AI-видео</h3><span class="amt">от 2 500 ₽</span><ul><li>Reels и короткие ролики</li><li>реклама и сюжет</li><li>музыка, титры и эффекты</li></ul><a class="btn solid" href="#apply">Обсудить →</a></div><div class="tier"><span class="pin">02 / PHOTOSHOOTS</span><h3 class="tt">AI-фотосессии</h3><span class="amt">от 1 200 ₽</span><ul><li>личные и парные серии</li><li>fashion и соцсети</li><li>единая стилистика</li></ul><a class="btn" href="#apply">Обсудить →</a></div><div class="tier"><span class="pin">03 / PRODUCT</span><h3 class="tt">Фото товара</h3><span class="amt">от 1 500 ₽</span><ul><li>предметные кадры</li><li>рекламные сцены</li><li>каталог и соцсети</li></ul><a class="btn" href="#apply">Обсудить →</a></div></div></div></section>
-<section><div class="shell"><span class="tc dim rv">FAQ</span><h2 class="tt rv" style="margin:22px 0 40px">Что обычно<br><span class="it">хочется уточнить</span></h2><div class="faq rv"><details open><summary>Что нужно для старта?<span>+</span></summary><p>Зависит от задачи: свои фотографии, фото товара, исходники и референсы.</p></details><details><summary>Сколько правок входит?<span>+</span></summary><p>Два круга правок.</p></details><details><summary>Какая предоплата?<span>+</span></summary><p>После согласования концепции — 50%.</p></details><details><summary>Сколько занимает работа?<span>+</span></summary><p>Стандартный срок — 2–7 рабочих дней.</p></details></div></div></section>
-<section id="apply"><div class="shell apply"><div><span class="tc rv">Начать проект</span><h2 class="tt rv" style="margin:22px 0 24px">Расскажи,<br><span class="it">что нужно снять без съёмки</span></h2><p class="body-lg rv">Выбери видео или фото и опиши задачу в двух строках.</p></div><form id="apf" class="rv"><label>Формат</label><input id="type" placeholder="AI-видео / AI-фото / товар" required><label>Задача</label><textarea id="task" placeholder="Что нужно создать и куда пойдёт материал" required></textarea><button class="btn solid" type="submit">Обсудить в Telegram →</button></form></div></section>
+
+<section class="hero">
+  <div class="shell">
+    <div class="hero-grid">
+      <div>
+        <span class="tc rv">AI video & photo</span>
+        <h1 class="tt rv">Подожди, это реально <span class="it">не снимали?</span></h1>
+        <p class="body-lg rv" style="margin-top:26px"><strong style="display:block;color:var(--paper);font-weight:400;margin-bottom:8px">Твоя идея. Без ограничений съёмочной площадки.</strong>AI-визуал, который позволяет воплощать образы и сцены без привязки к локации, команде и сложному продакшену — с вниманием к свету, композиции и кинематографичной подаче.</p>
+        <div class="acts rv">
+          <a class="btn solid" href="#video">Смотреть видео →</a>
+          <a class="btn" href="#photo">AI-фото</a>
+        </div>
+      </div>
+
+      <div class="hero-film rv">
+        <div class="frame big"><img src="https://www.neyroshka-ai.ru/images/home/0%20(4).png" alt="AI-видео"><span class="flabel">MOTION / 01</span></div>
+        <div class="smallcol">
+          <div class="frame small"><img src="https://www.neyroshka-ai.ru/images/ai-photo/story/b98783af-203e-45a2-a49c-64dd21e7a30a.png" alt="AI-фото"><span class="flabel">PHOTO / 02</span></div>
+          <div class="frame small"><img src="https://www.neyroshka-ai.ru/images/home/0%20(2).png" alt="Фото товара"><span class="flabel">PRODUCT / 03</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="video">
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <span class="tc dim rv">Главное направление</span>
+        <h2 class="tt rv" style="margin-top:22px">AI-видео.<br><span class="it">Не один жанр.</span></h2>
+      </div>
+      <p class="body-lg rv">Ролик подбирается под задачу, а не под один шаблон. Можно сделать рекламу, сюжет, стилизованную анимацию или видео с человеком — в одном визуальном уровне.</p>
+    </div>
+
+    <div class="video-types rv">
+      <div class="vtype"><span class="num">01</span><h3 class="tt">Рекламные ролики</h3><p>Продукт, услуга, запуск, таргет, промо и тесты креативов.</p></div>
+      <div class="vtype"><span class="num">02</span><h3 class="tt">Сюжетные видео</h3><p>Атмосферные истории, имиджевые ролики и короткие сцены.</p></div>
+      <div class="vtype"><span class="num">03</span><h3 class="tt">Анимация</h3><p>Рисованные, мультяшные и стилизованные форматы, персонажи и заставки.</p></div>
+      <div class="vtype"><span class="num">04</span><h3 class="tt">С человеком</h3><p>Видео с лицом клиента, персонажем или созданной моделью.</p></div>
+      <div class="vtype"><span class="num">05</span><h3 class="tt">Fashion / beauty / product</h3><p>Визуальные кампании, продуктовый motion и рекламная эстетика.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="works">
+  <div class="shell">
+    <div class="reel-head">
+      <div>
+        <span class="tc dim rv">Selected motion</span>
+        <h2 class="tt rv" style="margin-top:22px">Видео, которые<br><span class="it">решают разные задачи</span></h2>
+      </div>
+      <p class="body-lg rv" style="max-width:38ch">Здесь лучше показывать не «жанр», а зачем создавался ролик и где он должен работать.</p>
+    </div>
+
+    <div class="track rv">
+      <article class="shot">
+        <div class="poster"><img src="https://www.neyroshka-ai.ru/images/home/0%20(4).png" alt=""><span class="badge">REELS · 9:16</span></div>
+        <div class="meta"><h3 class="tt">Ролик для запуска</h3><p><strong>Задача:</strong> создать визуальный повод остановить скролл.<br><strong>Формат:</strong> короткий vertical motion.</p></div>
+      </article>
+      <article class="shot">
+        <div class="poster"><img src="https://www.neyroshka-ai.ru/images/ai-photo/story/b98783af-203e-45a2-a49c-64dd21e7a30a.png" alt=""><span class="badge">STORY · 9:16</span></div>
+        <div class="meta"><h3 class="tt">Сюжетное промо</h3><p><strong>Задача:</strong> передать настроение и образ без прямой продажи.<br><strong>Формат:</strong> cinematic story.</p></div>
+      </article>
+      <article class="shot">
+        <div class="poster"><img src="https://www.neyroshka-ai.ru/images/home/0%20(2).png" alt=""><span class="badge">PRODUCT · 9:16</span></div>
+        <div class="meta"><h3 class="tt">Product motion</h3><p><strong>Задача:</strong> сделать продукт главным героем сцены.<br><strong>Формат:</strong> рекламный motion.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="photo">
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <span class="tc dim rv">Второе направление</span>
+        <h2 class="tt rv" style="margin-top:22px">AI-фото<br><span class="it">в том же мире</span></h2>
+      </div>
+      <p class="body-lg rv">Фото работает самостоятельно или как продолжение видео: портреты, fashion, товарные сцены, рекламные кадры и контент для соцсетей.</p>
+    </div>
+
+    <div class="photo-grid rv">
+      <div class="photo-main">
+        <img src="https://www.neyroshka-ai.ru/images/ai-photo/story/b98783af-203e-45a2-a49c-64dd21e7a30a.png" alt="AI-фотосессия"><div class="overlay"></div>
+        <div class="pcopy"><h3 class="tt">AI-фотосессии</h3><p>Личные образы, fashion, пары, экспертный контент.</p></div>
+      </div>
+      <div class="photo-col">
+        <div class="photo-side"><img src="https://www.neyroshka-ai.ru/images/home/0%20(2).png" alt="Фото товара"><div class="overlay"></div><div class="pcopy"><h3 class="tt">Фото товара</h3><p>Предметные и рекламные сцены.</p></div></div>
+        <div class="photo-side"><img src="https://www.neyroshka-ai.ru/images/home/0%20(1).png" alt="Контент"><div class="overlay"></div><div class="pcopy"><h3 class="tt">Контент к видео</h3><p>Обложки и кадры в том же визуальном стиле.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <span class="tc dim rv">До / после</span>
+        <h2 class="tt rv" style="margin-top:22px">Из исходника<br><span class="it">в готовый образ</span></h2>
+      </div>
+      <p class="body-lg rv">Этот блок лучше заполнять реальной парой «исходник → результат», чтобы сразу снимать вопрос о качестве исходных материалов.</p>
+    </div>
+    <div class="proof rv">
+      <div class="proofbox"><div class="proofcap"><span class="tc">Исходник</span><span class="tc dim">до</span></div><div class="placeholder">Поставь сюда реальный исходник клиента из кейса</div></div>
+      <div class="proofbox"><div class="proofcap"><span class="tc">Результат</span><span class="tc dim">после</span></div><img src="https://www.neyroshka-ai.ru/images/ai-photo/story/b98783af-203e-45a2-a49c-64dd21e7a30a.png" alt=""></div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="shell">
+    <span class="tc dim rv">Как это работает</span>
+    <h2 class="tt rv" style="margin:22px 0 46px">Пять тактов</h2>
+    <div class="process rv">
+      <div class="beat"><span class="n">01</span><h3 class="tt">Обсуждение</h3><p>Определяем задачу и формат.</p></div>
+      <div class="beat"><span class="n">02</span><h3 class="tt">Материалы</h3><p>Фото, продукт, исходники и референсы.</p></div>
+      <div class="beat"><span class="n">03</span><h3 class="tt">Концепция</h3><p>Стиль, свет, композиция. После согласования — 50% предоплата.</p></div>
+      <div class="beat"><span class="n">04</span><h3 class="tt">Создание</h3><p>Фото или видео. Два круга правок входят.</p></div>
+      <div class="beat"><span class="n">05</span><h3 class="tt">Результат</h3><p>Готовые материалы. Стандартный срок — 2–7 рабочих дней.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="prices">
+  <div class="shell">
+    <div class="section-head">
+      <div>
+        <span class="tc dim rv">Цены</span>
+        <h2 class="tt rv" style="margin-top:22px">Видео — главное.<br><span class="it">Фото — рядом.</span></h2>
+      </div>
+      <p class="body-lg rv">Точная стоимость зависит от объёма и сложности задачи и фиксируется до начала работы.</p>
+    </div>
+    <div class="tiers rv">
+      <div class="tier"><span class="pin">01 / MOTION</span><h3 class="tt">AI-видео</h3><span class="amt">от 2 500 ₽</span><ul><li>Reels и короткие ролики</li><li>реклама и сюжет</li><li>музыка, титры и эффекты</li></ul><a class="btn solid" href="#apply">Обсудить →</a></div>
+      <div class="tier"><span class="pin">02 / PHOTOSHOOTS</span><h3 class="tt">AI-фотосессии</h3><span class="amt">от 1 200 ₽</span><ul><li>личные и парные серии</li><li>fashion и соцсети</li><li>единая стилистика</li></ul><a class="btn" href="#apply">Обсудить →</a></div>
+      <div class="tier"><span class="pin">03 / PRODUCT</span><h3 class="tt">Фото товара</h3><span class="amt">от 1 500 ₽</span><ul><li>предметные кадры</li><li>рекламные сцены</li><li>каталог и соцсети</li></ul><a class="btn" href="#apply">Обсудить →</a></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shell">
+    <span class="tc dim rv">FAQ</span>
+    <h2 class="tt rv" style="margin:22px 0 40px">Что обычно<br><span class="it">хочется уточнить</span></h2>
+    <div class="faq rv">
+      <details open><summary>Что нужно для старта?<span>+</span></summary><p>Зависит от задачи: свои фотографии, фото товара, исходники и референсы.</p></details>
+      <details><summary>Сколько правок входит?<span>+</span></summary><p>Два круга правок.</p></details>
+      <details><summary>Какая предоплата?<span>+</span></summary><p>После согласования концепции — 50%.</p></details>
+      <details><summary>Сколько занимает работа?<span>+</span></summary><p>Стандартный срок — 2–7 рабочих дней.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="apply">
+  <div class="shell apply">
+    <div>
+      <span class="tc rv">Начать проект</span>
+      <h2 class="tt rv" style="margin:22px 0 24px">Расскажи,<br><span class="it">что нужно снять без съёмки</span></h2>
+      <p class="body-lg rv">Выбери видео или фото и опиши задачу в двух строках.</p>
+    </div>
+    <form id="apf" class="rv">
+      <label>Формат</label>
+      <input id="type" placeholder="AI-видео / AI-фото / товар" required>
+      <label>Задача</label>
+      <textarea id="task" placeholder="Что нужно создать и куда пойдёт материал" required></textarea>
+      <button class="btn solid" type="submit">Обсудить в Telegram →</button>
+    </form>
+  </div>
+</section>
+
 </main>
-<footer><div class="shell frow"><span class="logo" style="font-size:15px">Neyroshka<b>.</b></span><span class="sp"></span><span>AI video & photo</span><span>2026</span><a href="https://www.neyroshka-ai.ru/privacy">Политика конфиденциальности</a></div></footer>
-<script>(function(){const hdr=document.getElementById('hdr');addEventListener('scroll',()=>hdr.classList.toggle('stuck',scrollY>28),{passive:true});const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -6%'});document.querySelectorAll('.rv').forEach(el=>io.observe(el));document.getElementById('apf').addEventListener('submit',e=>{e.preventDefault();const type=document.getElementById('type').value.trim();const task=document.getElementById('task').value.trim();location.href='https://t.me/neyroshka_ai?text='+encodeURIComponent(`Здравствуйте! Хочу обсудить проект.\n\nФормат: ${type}\nЗадача: ${task}`)});const canvas=document.getElementById('grain');if(canvas&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const ctx=canvas.getContext('2d');let img,w,h;const resize=()=>{w=canvas.width=innerWidth;h=canvas.height=innerHeight;img=ctx.createImageData(w,h)};const draw=()=>{for(let i=0;i<img.data.length;i+=4){const v=Math.random()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=15}ctx.putImageData(img,0,0);requestAnimationFrame(draw)};resize();addEventListener('resize',resize);draw()}})();</script>
+
+<footer>
+  <div class="shell frow"><span class="logo" style="font-size:15px">Neyroshka<b>.</b></span><span class="sp"></span><span>AI video & photo</span><span>2026</span><a href="https://www.neyroshka-ai.ru/privacy">Политика конфиденциальности</a></div>
+</footer>
+
+<script>
+(function(){
+  const hdr=document.getElementById('hdr');
+  addEventListener('scroll',()=>hdr.classList.toggle('stuck',scrollY>28),{passive:true});
+
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+  },{threshold:.12,rootMargin:'0px 0px -6%'});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+  document.getElementById('apf').addEventListener('submit',e=>{
+    e.preventDefault();
+    const type=document.getElementById('type').value.trim();
+    const task=document.getElementById('task').value.trim();
+    location.href='https://t.me/neyroshka_ai?text='+encodeURIComponent(`Здравствуйте! Хочу обсудить проект.\n\nФормат: ${type}\nЗадача: ${task}`);
+  });
+
+  const canvas=document.getElementById('grain');
+  if(canvas && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const ctx=canvas.getContext('2d');
+    let img,w,h;
+    const resize=()=>{w=canvas.width=innerWidth;h=canvas.height=innerHeight;img=ctx.createImageData(w,h)};
+    const draw=()=>{for(let i=0;i<img.data.length;i+=4){const v=Math.random()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=15}ctx.putImageData(img,0,0);requestAnimationFrame(draw)};
+    resize();addEventListener('resize',resize);draw();
+  }
+})();
+</script>
 </body>
 </html>
