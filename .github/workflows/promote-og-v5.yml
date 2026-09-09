@@ -33,3 +33,5 @@ jobs:
           git add index.html images/neyroshka-header-preview-v5.jpg
           git commit -m "Promote approved OG preview v5" || exit 0
           git push
+
+# trigger approved v5
