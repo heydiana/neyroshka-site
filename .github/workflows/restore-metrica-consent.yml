@@ -1,4 +1,4 @@
-name: Restore Metrica consent
+name: Fix consent choice persistence
 
 on:
   push:
@@ -10,48 +10,27 @@ permissions:
   contents: write
 
 jobs:
-  restore:
+  fix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Restore consent-gated Yandex Metrica
+      - name: Fix localStorage persistence
         run: |
           python - <<'PY'
           from pathlib import Path
-          import base64
-
-          path = Path('index.html')
-          text = path.read_text(encoding='utf-8')
-
-          old_privacy = '<p>В этой версии сайта не подключены Яндекс Метрика, Вебвизор, рекламные пиксели и другие системы веб-аналитики. Сайт не устанавливает аналитические или рекламные cookie и не сохраняет выбор согласия на аналитику.</p>'
-          new_privacy = '<p>На сайте используется Яндекс Метрика. Аналитика загружается только после вашего согласия в плашке на сайте. До согласия код Метрики не запускается. Выбор сохраняется в localStorage браузера, чтобы не спрашивать повторно при каждом открытии сайта.</p>'
-          old_technical = 'Отсутствие аналитики не означает отсутствия технических запросов, необходимых для отображения сайта.'
-          new_technical = 'Эти технические запросы выполняются независимо от выбора аналитики и необходимы для отображения сайта.'
-
-          if old_privacy not in text:
-              raise RuntimeError('Expected privacy analytics paragraph was not found')
-          if old_technical not in text:
-              raise RuntimeError('Expected technical-request sentence was not found')
-
-          text = text.replace(old_privacy, new_privacy, 1)
-          text = text.replace(old_technical, new_technical, 1)
-
-          consent_block = base64.b64decode('CjxzdHlsZSBpZD0ibnktbWV0cmljYS1jb25zZW50LXN0eWxlIj4KI255TWV0cmljYUNvbnNlbnR7cG9zaXRpb246Zml4ZWQ7bGVmdDoxNnB4O3JpZ2h0OjE2cHg7Ym90dG9tOjE2cHg7ei1pbmRleDo5OTk5ODtkaXNwbGF5OmZsZXg7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7Z2FwOjE0cHg7ZmxleC13cmFwOndyYXA7YmFja2dyb3VuZDojMEQxMTE5O2JvcmRlcjoxcHggc29saWQgcmdiYSgyNDIsMjQ1LDI0OSwuMTYpO2JvcmRlci1yYWRpdXM6MTRweDtwYWRkaW5nOjE0cHggMThweDtjb2xvcjojZDdkZGU2O2JveC1zaGFkb3c6MCAxOHB4IDQycHggcmdiYSgwLDAsMCwuNSk7Zm9udDo0MDAgMTNweC8xLjUgQXJpYWwsc2Fucy1zZXJpZn0KI255TWV0cmljYUNvbnNlbnQgc3BhbnttYXgtd2lkdGg6NzYwcHh9CiNueU1ldHJpY2FDb25zZW50IGF7Y29sb3I6I0E4QzZFOH0KI255TWV0cmljYUNvbnNlbnQgLm55LWNvbnNlbnQtYWN0aW9uc3tkaXNwbGF5OmZsZXg7Z2FwOjhweDtmbGV4LXdyYXA6d3JhcH0KI255TWV0cmljYUNvbnNlbnQgYnV0dG9ue2JvcmRlcjoxcHggc29saWQgcmdiYSgxNjgsMTk4LDIzMiwuNDUpO2JvcmRlci1yYWRpdXM6OTk5cHg7cGFkZGluZzo5cHggMTZweDtjdXJzb3I6cG9pbnRlcjtmb250OjYwMCAxMnB4LzEuMiBBcmlhbCxzYW5zLXNlcmlmfQojbnlNZXRyaWNhQ29uc2VudCBbZGF0YS1jb25zZW50PSJhY2NlcHQiXXtiYWNrZ3JvdW5kOiNBOEM2RTg7Y29sb3I6IzA4MEEwRn0KI255TWV0cmljYUNvbnNlbnQgW2RhdGEtY29uc2VudD0icmVqZWN0Il17YmFja2dyb3VuZDp0cmFuc3BhcmVudDtjb2xvcjojRjJGNUY5fQpAbWVkaWEobWF4LXdpZHRoOjY0MHB4KXsjbnlNZXRyaWNhQ29uc2VudHtsZWZ0OjEwcHg7cmlnaHQ6MTBweDtib3R0b206MTBweDtqdXN0aWZ5LWNvbnRlbnQ6ZmxleC1zdGFydDtwYWRkaW5nOjEycHggMTRweH0jbnlNZXRyaWNhQ29uc2VudCAubnktY29uc2VudC1hY3Rpb25ze3dpZHRoOjEwMCV9I255TWV0cmljYUNvbnNlbnQgYnV0dG9ue2ZsZXg6MSAxIGF1dG99fQo8L3N0eWxlPgo8c2NyaXB0IGlkPSJueS1tZXRyaWNhLWNvbnNlbnQiPgooZnVuY3Rpb24oKXsKICB2YXIgQ09VTlRFUl9JRD0xMTE2Mzk3MDk7CiAgdmFyIEtFWT0nbnktbWV0cmljYS1jb25zZW50LXYxJzsKCiAgZnVuY3Rpb24gbG9hZE1ldHJpY2EoKXsKICAgIGlmKHdpbmRvdy5fX255TWV0cmljYUxvYWRlZClyZXR1cm47CiAgICB3aW5kb3cuX19ueU1ldHJpY2FMb2FkZWQ9dHJ1ZTsKICAgIChmdW5jdGlvbihtLGUsdCxyLGksayxhKXsKICAgICAgbVtpXT1tW2ldfHxmdW5jdGlvbigpeyhtW2ldLmE9bVtpXS5hfHxbXSkucHVzaChhcmd1bWVudHMpfTsKICAgICAgbVtpXS5sPTEqbmV3IERhdGUoKTsKICAgICAgZm9yKHZhciBqPTA7ajxkb2N1bWVudC5zY3JpcHRzLmxlbmd0aDtqKyspe2lmKGRvY3VtZW50LnNjcmlwdHNbal0uc3JjPT09cilyZXR1cm47fQogICAgICBrPWUuY3JlYXRlRWxlbWVudCh0KTthPWUuZ2V0RWxlbWVudHNCeVRhZ05hbWUodClbMF07ay5hc3luYz0xO2suc3JjPXI7YS5wYXJlbnROb2RlLmluc2VydEJlZm9yZShrLGEpOwogICAgfSkod2luZG93LGRvY3VtZW50LCdzY3JpcHQnLCdodHRwczovL21jLnlhbmRleC5ydS9tZXRyaWthL3RhZy5qcz9pZD0nK0NPVU5URVJfSUQsJ3ltJyk7CiAgICB5bShDT1VOVEVSX0lELCdpbml0Jyx7c3NyOnRydWUsd2Vidmlzb3I6dHJ1ZSxjbGlja21hcDp0cnVlLGVjb21tZXJjZTonZGF0YUxheWVyJyxhY2N1cmF0ZVRyYWNrQm91bmNlOnRydWUsdHJhY2tMaW5rczp0cnVlfSk7CiAgfQoKICBmdW5jdGlvbiByZWFkQ2hvaWNlKCl7dHJ5e3JldHVybiBsb2NhbFN0b3JhZ2UuZ2V0SXRlbShLRVkpfHwnJ31jYXRjaChlKXtyZXR1cm4gJyd9fQogIGZ1bmN0aW9uIHNhdmVDaG9pY2UodmFsdWUpe3RyeXtsb2NhbFN0b3JhZ2UuZ2V0SXRlbShLRVksdmFsdWUpfWNhdGNoKGUpe319CgogIGZ1bmN0aW9uIHNob3dDb25zZW50KCl7CiAgICBpZihkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbnlNZXRyaWNhQ29uc2VudCcpKXJldHVybjsKICAgIHZhciBib3g9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAgICBib3guaWQ9J255TWV0cmljYUNvbnNlbnQnOwogICAgYm94LnNldEF0dHJpYnV0ZSgncm9sZScsJ2RpYWxvZycpOwogICAgYm94LnNldEF0dHJpYnV0ZSgnYXJpYS1sYWJlbCcsJ9Cd0LDRgdGC0YDQvtC50LrQuCDQsNC90LDQu9C40YLQuNC60LgnKTsKICAgIGJveC5pbm5lckhUTUw9JzxzcGFuPtCh0LDQudGCINC40YHQv9C+0LvRjNC30YPQtdGCINCv0L3QtNC10LrRgSDQnNC10YLRgNC40LrRgyDQtNC70Y8g0L7QsdC10LfQu9C40YfQtdC90L3QvtC5INCw0L3QsNC70LjRgtC40LrQuC4g0JzQtdGC0YDQuNC60LAg0LfQsNC/0YPRgdGC0LjRgtGB0Y8g0YLQvtC70YzQutC+INC/0L7RgdC70LUg0LLQsNGI0LXQs9C+INGB0L7Qs9C70LDRgdC40Y8uIDxhIGhyZWY9IiNwcml2YWN5Ij7Qn9C+0LTRgNC+0LHQvdC10LU8L2E+Ljwvc3Bhbj48ZGl2IGNsYXNzPSJueS1jb25zZW50LWFjdGlvbnMiPjxidXR0b24gdHlwZT0iYnV0dG9uIiBkYXRhLWNvbnNlbnQ9InJlamVjdCI+0KLQvtC70YzQutC+INC90LXQvtCx0YXQvtC00LjQvNGL0LU8L2J1dHRvbj48YnV0dG9uIHR5cGU9ImJ1dHRvbiIgZGF0YS1jb25zZW50PSJhY2NlcHQiPtCg0LDQt9GA0LXRiNC40YLRjCDQsNC90LDQu9C40YLQuNC60YM8L2J1dHRvbj48L2Rpdj4nOwogICAgZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZChib3gpOwogICAgYm94LnF1ZXJ5U2VsZWN0b3IoJ1tkYXRhLWNvbnNlbnQ9ImFjY2VwdCJdJykuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLGZ1bmN0aW9uKCl7c2F2ZUNob2ljZSgnYWNjZXB0ZWQnKTtib3gucmVtb3ZlKCk7bG9hZE1ldHJpY2EoKTt9KTsKICAgIGJveC5xdWVyeVNlbGVjdG9yKCdbZGF0YS1jb25zZW50PSJyZWplY3QiXScpLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJyxmdW5jdGlvbigpe3NhdmVDaG9pY2UoJ3JlamVjdGVkJyk7Ym94LnJlbW92ZSgpO30pOwogIH0KCiAgZnVuY3Rpb24gaW5pdCgpewogICAgdmFyIGNob2ljZT1yZWFkQ2hvaWNlKCk7CiAgICBpZihjaG9pY2U9PT0nYWNjZXB0ZWQnKXtsb2FkTWV0cmljYSgpO3JldHVybjt9CiAgICBpZihjaG9pY2U9PT0ncmVqZWN0ZWQnKXJldHVybjsKICAgIHNob3dDb25zZW50KCk7CiAgfQoKICBpZihkb2N1bWVudC5yZWFkeVN0YXRlPT09J2xvYWRpbmcnKWRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoJ0RPTUNvbnRlbnRMb2FkZWQnLGluaXQse29uY2U6dHJ1ZX0pO2Vsc2UgaW5pdCgpOwp9KSgpOwo8L3NjcmlwdD4K').decode('utf-8')
-
-          if 'id="ny-metrica-consent"' not in text:
-              if '</body>' not in text:
-                  raise RuntimeError('Closing body tag was not found')
-              text = text.replace('</body>', consent_block + '\n</body>', 1)
-
-          path.write_text(text, encoding='utf-8')
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          old = 'function saveChoice(value){try{localStorage.getItem(KEY,value)}catch(e){}}'
+          new = 'function saveChoice(value){try{localStorage.setItem(KEY,value)}catch(e){}}'
+          if old not in s:
+              raise RuntimeError('Expected consent persistence code was not found')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
           PY
-
-      - name: Commit site update
+      - name: Commit fix
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m "Restore consent-gated Yandex Metrica"
+          git commit -m "Fix consent choice persistence"
           git push
