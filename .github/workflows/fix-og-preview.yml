@@ -1,0 +1,55 @@
+name: Fix OG preview
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-og-preview.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ensure ImageMagick
+        run: |
+          if ! command -v magick >/dev/null 2>&1 && ! command -v convert >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y imagemagick
+          fi
+
+      - name: Crop empty canvas and create OG v3
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="images/neyroshka-header-preview-v2.jpg"
+          OUT="images/neyroshka-header-preview-v3.jpg"
+          IM="convert"
+          if command -v magick >/dev/null 2>&1; then IM="magick"; fi
+          echo "SOURCE=$($IM identify -format '%wx%h' "$SRC" 2>/dev/null || identify -format '%wx%h' "$SRC")"
+          echo "TRIM=$($IM "$SRC" -fuzz 6% -trim -format '%wx%h%O' info:)"
+          $IM "$SRC" -fuzz 6% -trim +repage -resize '1200x630^' -gravity center -extent 1200x630 -quality 92 "$OUT"
+          echo "OUTPUT=$($IM identify -format '%wx%h' "$OUT" 2>/dev/null || identify -format '%wx%h' "$OUT")"
+
+      - name: Point metadata to OG v3
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('images/neyroshka-header-preview-v2.jpg','images/neyroshka-header-preview-v3.jpg')
+          s=s.replace('<meta property="og:image:width" content="1185">','<meta property="og:image:width" content="1200">')
+          s=s.replace('<meta property="og:image:height" content="622">','<meta property="og:image:height" content="630">')
+          p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Commit fixed preview
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html images/neyroshka-header-preview-v3.jpg
+          git commit -m "Fix OG preview crop" || exit 0
+          git push
