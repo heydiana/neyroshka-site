@@ -53,3 +53,5 @@ jobs:
           git add index.html images/neyroshka-header-preview-v3.jpg
           git commit -m "Fix OG preview crop" || exit 0
           git push
+
+# trigger run
