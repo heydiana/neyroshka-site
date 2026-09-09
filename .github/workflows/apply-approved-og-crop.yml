@@ -40,3 +40,5 @@ jobs:
           git add images/neyroshka-header-preview-v4.jpg
           git commit -m "Apply approved OG preview crop" || exit 0
           git push
+
+# trigger approved crop
