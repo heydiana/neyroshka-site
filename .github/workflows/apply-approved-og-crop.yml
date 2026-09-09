@@ -1,0 +1,42 @@
+name: Apply approved OG crop
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-approved-og-crop.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  crop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ensure ImageMagick
+        run: |
+          if ! command -v magick >/dev/null 2>&1 && ! command -v convert >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y imagemagick
+          fi
+
+      - name: Apply approved crop
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="images/neyroshka-header-preview-v4.jpg"
+          TMP="images/neyroshka-header-preview-v4-approved.jpg"
+          IM="convert"
+          if command -v magick >/dev/null 2>&1; then IM="magick"; fi
+          $IM "$SRC" -crop '930x510+0+0' +repage -resize '1200x630!' -quality 94 "$TMP"
+          mv "$TMP" "$SRC"
+          echo "OUTPUT=$($IM identify -format '%wx%h' "$SRC" 2>/dev/null || identify -format '%wx%h' "$SRC")"
+
+      - name: Commit approved preview
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/neyroshka-header-preview-v4.jpg
+          git commit -m "Apply approved OG preview crop" || exit 0
+          git push
