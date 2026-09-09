@@ -2363,13 +2363,13 @@ body.mnav-lock{overflow:hidden}
 <style>
 .legal-dialog{width:min(760px,calc(100% - 32px));max-height:85svh;padding:clamp(24px,5vw,48px);background:var(--coal-2);color:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:auto}
 .legal-dialog::backdrop{background:rgba(0,0,0,.8);backdrop-filter:blur(5px)}
-.legal-dialog h2{overflow-wrap:anywhere;hyphens:auto;font-family:"Bodoni Moda",Georgia,serif;font-size:clamp(26px,4vw,40px);line-height:1.15;margin:16px 0 24px}.legal-dialog h3{font-size:18px;margin:28px 0 12px}.legal-dialog p{color:#b5bfcc;line-height:1.7;margin:12px 0}.legal-dialog a,.cookie-copy a{text-decoration:underline;text-underline-offset:3px}.legal-close{float:right;color:var(--paper);background:transparent;border:1px solid var(--line);border-radius:50%;width:44px;height:44px;font-size:24px;cursor:pointer}
-.legal-action{font:inherit;color:inherit;background:transparent;border:0;padding:0;text-decoration:underline;cursor:pointer}
-.cookie-panel{position:fixed;z-index:1000;bottom:20px;left:20px;max-width:560px;width:calc(100% - 40px);padding:24px;background:#101620;border:1px solid #46505e;border-radius:16px;box-shadow:0 18px 80px #0009;color:var(--paper)}
-.cookie-panel[hidden]{display:none}.cookie-panel h2{font-size:19px;margin:0 0 10px}.cookie-copy{font-size:14px;line-height:1.6;color:#c1cad6}.cookie-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.cookie-actions button{padding:12px 16px;min-height:44px;border:1px solid #697585;border-radius:24px;background:transparent;color:var(--paper);font:inherit;font-size:13px;cursor:pointer}.cookie-actions button:last-child{background:var(--red);border-color:var(--red)}
-.legal-dialog :focus-visible,.cookie-panel :focus-visible,.legal-action:focus-visible{outline:2px solid var(--ice);outline-offset:4px}
-@media(max-width:480px){.legal-dialog h2{font-size:22px}.cookie-panel{bottom:10px;left:10px;width:calc(100% - 20px);padding:18px}.cookie-actions{flex-direction:column}.cookie-actions button{width:100%}}
-</style></head>
+.legal-dialog h2{overflow-wrap:anywhere;hyphens:auto;font-family:"Bodoni Moda",Georgia,serif;font-size:clamp(26px,4vw,40px);line-height:1.15;margin:16px 0 24px}
+.legal-dialog h3{font-size:18px;margin:28px 0 12px}.legal-dialog p{color:#b5bfcc;line-height:1.7;margin:12px 0}.legal-dialog a{text-decoration:underline;text-underline-offset:3px}
+.legal-close{float:right;color:var(--paper);background:transparent;border:1px solid var(--line);border-radius:50%;width:44px;height:44px;font-size:24px;cursor:pointer}
+.legal-dialog :focus-visible{outline:2px solid var(--ice);outline-offset:4px}
+@media(max-width:480px){.legal-dialog h2{font-size:22px}}
+</style>
+<noscript><style>.legal-dialog{display:block;position:static;margin:32px auto;max-height:none}.legal-close{display:none}</style></noscript></head>
 <body class="locked">
 
 <div class="cur" aria-hidden="true"></div>
@@ -2804,7 +2804,7 @@ body.mnav-lock{overflow:hidden}
 
 <footer>
   <div class="shell frow"><span class="logo" style="font-size:15px">Neyroshka<b>.</b></span><span class="sp"></span><span>AI video & photo</span><span>2026</span><a href="#privacy">Политика конфиденциальности</a></div>
-<div class="shell frow" style="margin-top:18px"><a href="#consent">Согласие на обработку данных</a><button class="legal-action" id="cookie-settings" type="button">Настройки аналитики</button></div></footer>
+</footer>
 
 <script>
 (function(){
@@ -3299,52 +3299,35 @@ body.mnav-lock{overflow:hidden}
   addEventListener('resize',()=>{ if(innerWidth>860) close(); });
 })();
 </script>
-<dialog class="legal-dialog" id="privacy" aria-labelledby="privacy-title"><button class="legal-close" type="button" aria-label="Закрыть">×</button><span class="tc">NEYROSHKA / документы</span><h2 id="privacy-title">Политика конфиденциальности</h2><p>Редакция от 9 сентября 2026 года. Сайт: neyroshka-ai.ru.</p><h3>1. Оператор и область действия</h3><p>Владелец сайта NEYROSHKA; контакт для обращений — <a href="https://t.me/neyroshka_ai" target="_blank" rel="noopener">Telegram @neyroshka_ai</a>. Политика описывает обработку данных посетителей этого сайта. Сайт не содержит форм регистрации, заказа или оплаты.</p><h3>2. Данные и цели обработки</h3><p>При согласии на аналитику Яндекс Метрика обрабатывает IP-адрес, сведения об устройстве и браузере, источник перехода, адреса просмотренных страниц, время посещения, действия на сайте и идентификаторы cookie. Цель — оценивать посещаемость и улучшать содержание и удобство сайта.</p><h3>3. Аналитика и выбор посетителя</h3><p>Счётчик Яндекс Метрики № 111639709 загружается только после нажатия «Разрешить аналитику». До выбора и при отказе счётчик не загружается. В этой редакции Вебвизор отключён. Продолжение просмотра сайта само по себе не означает согласия.</p><p>Данные аналитики передаются ООО «Яндекс». Подробнее: <a href="https://yandex.ru/legal/confidential/" target="_blank" rel="noopener">политика Яндекса</a> и <a href="https://yandex.ru/support/metrica/ru/general/cookie-usage" target="_blank" rel="noopener">файлы cookie Метрики</a>.</p><h3>4. Хранение выбора и отзыв согласия</h3><p>Сайт сохраняет выбор аналитики в localStorage этого браузера на 180 дней. Эта запись нужна для запоминания настройки. Если хранение недоступно, выбор действует до закрытия или перезагрузки страницы. Изменить выбор и отозвать согласие можно через «Настройки аналитики» внизу сайта. При отказе дальнейшая работа счётчика прекращается. Отзыв не удаляет автоматически ранее переданные данные: по этому вопросу обратитесь к оператору.</p><h3>5. Загрузка материалов и внешние сервисы</h3><p>Для отображения шрифтов, изображений и видео браузер обращается к Google Fonts, Cloudinary и серверу сайта. При этих запросах соответствующие серверы получают технические сведения, в том числе IP-адрес. Выбор аналитики относится к Яндекс Метрике и не отключает загрузку материалов.</p><p>Кнопки связи открывают Telegram. Передача сообщений и материалов происходит в Telegram и регулируется также его условиями. Согласие на аналитику сайта не является согласием на обработку фотографий для заказа или их публикацию.</p><h3>6. Права и обращения</h3><p>Вы можете запросить сведения об обработке данных, их уточнение, блокирование или удаление, а также отозвать согласие, обратившись по указанному выше контакту. Срок хранения данных аналитики зависит от правил сервиса и настроек оператора.</p><h3>7. Изменения политики</h3><p>Актуальная версия доступна по ссылке «Политика конфиденциальности» внизу сайта. При изменении целей или состава обработки требуется пересмотр согласия.</p></dialog>
-<dialog class="legal-dialog" id="consent" aria-labelledby="consent-title"><button class="legal-close" type="button" aria-label="Закрыть">×</button><span class="tc">NEYROSHKA / документы</span><h2 id="consent-title">Согласие на обработку данных</h2><p>Отдельное согласие на аналитику сайта · редакция от 9 сентября 2026 года.</p><p>Нажимая «Разрешить аналитику», я добровольно даю оператору сайта neyroshka-ai.ru согласие на автоматизированную обработку перечисленных ниже данных для анализа посещаемости и улучшения сайта.</p><h3>Оператор</h3><p>Владелец сайта NEYROSHKA; контакт для обращений — <a href="https://t.me/neyroshka_ai" target="_blank" rel="noopener">Telegram @neyroshka_ai</a>.</p><h3>Данные и действия</h3><p>IP-адрес, сведения об устройстве и браузере, источник перехода, просмотренные страницы, время посещения, действия на сайте и идентификаторы cookie. Обработка включает сбор, запись, систематизацию, накопление, хранение, использование, передачу ООО «Яндекс» для работы Яндекс Метрики, обезличивание и удаление.</p><h3>Срок и отзыв</h3><p>Выбор действует 180 дней в этом браузере либо до отзыва, если он произойдёт раньше. Отозвать согласие можно через «Настройки аналитики» внизу сайта; по вопросам ранее собранных данных — через контакт оператора.</p><p>Отказ не ограничивает просмотр сайта. Согласие не распространяется на рекламные рассылки, обработку фотографий для заказа или публикацию материалов.</p></dialog>
-<aside class="cookie-panel" id="cookie-panel" aria-labelledby="cookie-title" hidden><h2 id="cookie-title">Разрешить аналитику?</h2><p class="cookie-copy">С вашего согласия Яндекс Метрика использует cookie и данные о посещении, чтобы помочь улучшить сайт. Можно продолжить без аналитики.</p><p class="cookie-copy" style="margin-top:10px"><a href="#consent">Текст согласия</a> · <a href="#privacy">Политика конфиденциальности</a></p><div class="cookie-actions"><button type="button" id="cookie-reject">Без аналитики</button><button type="button" id="cookie-accept">Разрешить аналитику</button></div></aside>
-<script>(() => {
-  'use strict';
-  const KEY='neyroshka.analytics.v1', AGE=180*86400000, ID=111639709;
-  const panel=document.getElementById('cookie-panel');
-  let started=false, loaded=false, previousFocus=null;
-  let choice=null;
-  try { const item=JSON.parse(localStorage.getItem(KEY)); if(item && ['yes','no'].includes(item.value) && item.until>Date.now()) choice=item.value; } catch {}
-  window['disableYaCounter'+ID]=choice!=='yes';
-  function start(){
-    if(started)return; started=true;
-    window['disableYaCounter'+ID]=false;
-    window.ym=window.ym||function(){(window.ym.a=window.ym.a||[]).push(arguments);};
-    window.ym.l=Date.now();
-    if(!loaded){const script=document.createElement('script'); script.async=true; script.src='https://mc.yandex.ru/metrika/tag.js'; document.head.append(script);loaded=true;}
-    window.ym(ID,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:false});
-  }
-  function save(value){
-    choice=value;
-    try{localStorage.setItem(KEY,JSON.stringify({value,until:Date.now()+AGE,version:1}));}catch{}
-    panel.hidden=true;
-    if(value==='yes')start();
-    else {
-      window['disableYaCounter'+ID]=true;
-      if(started && window.ym)window.ym(ID,'destruct');
-      started=false;
-    }
-    if(previousFocus){previousFocus.focus();previousFocus=null;}
-  }
-  document.getElementById('cookie-accept').addEventListener('click',()=>save('yes'));
-  document.getElementById('cookie-reject').addEventListener('click',()=>save('no'));
-  document.getElementById('cookie-settings').addEventListener('click',e=>{previousFocus=e.currentTarget;panel.hidden=false;document.getElementById('cookie-reject').focus();});
-  const dialogs=[...document.querySelectorAll('.legal-dialog')];
+<dialog class="legal-dialog" id="privacy" aria-labelledby="privacy-title">
+  <button class="legal-close" type="button" aria-label="Закрыть">×</button>
+  <span class="tc">NEYROSHKA / документы</span>
+  <h2 id="privacy-title">Политика конфиденциальности</h2>
+  <p>Редакция от 9 сентября 2026 года. Сайт: neyroshka-ai.ru.</p>
+  <h3>1. Информация на сайте</h3>
+  <p>NEYROSHKA — сайт-портфолио с примерами AI-видео и фотографий. На сайте нет регистрации, личного кабинета, форм заявок, загрузки файлов или онлайн-оплаты. Сайт не запрашивает имя, телефон, email или фотографии посетителя.</p>
+  <h3>2. Аналитика и cookie</h3>
+  <p>В этой версии сайта не подключены Яндекс Метрика, Вебвизор, рекламные пиксели и другие системы веб-аналитики. Сайт не устанавливает аналитические или рекламные cookie и не сохраняет выбор согласия на аналитику.</p>
+  <h3>3. Техническая загрузка страниц</h3>
+  <p>Для показа страниц, шрифтов, изображений и видео браузер обращается к хостингу сайта, Google Fonts и Cloudinary. При сетевых запросах этим сервисам передаются технические сведения, в том числе IP-адрес и сведения о браузере; они могут обрабатываться по правилам соответствующих сервисов. Отсутствие аналитики не означает отсутствия технических запросов, необходимых для отображения сайта.</p>
+  <h3>4. Связь в Telegram</h3>
+  <p>Кнопки связи ведут в Telegram. Сам переход не отправляет сообщение от вашего имени. Если вы решите написать или передать материалы, это происходит в Telegram и регулируется также его условиями. Переписка и материалы заказа не собираются через формы этого сайта.</p>
+  <h3>5. Вопросы и изменения</h3>
+  <p>По вопросам работы сайта можно обратиться в <a href="https://t.me/neyroshka_ai" target="_blank" rel="noopener">Telegram @neyroshka_ai</a>. Если на сайте появятся формы или аналитика, информация об их работе будет отражена в новой редакции политики.</p>
+</dialog>
+<script>
+(() => {
+  const dialog=document.getElementById('privacy');
   function sync(){
-    const wanted=dialogs.find(d=>'#'+d.id===location.hash);
-    for(const d of dialogs){if(d!==wanted && d.open)d.close();}
-    if(wanted&&!wanted.open)wanted.showModal();
+    if(location.hash==='#privacy'&&!dialog.open)dialog.showModal();
+    else if(location.hash!=='#privacy'&&dialog.open)dialog.close();
   }
-  dialogs.forEach(d=>{
-    d.querySelector('.legal-close').addEventListener('click',()=>d.close());
-    d.addEventListener('close',()=>{if(location.hash==='#'+d.id)history.replaceState(null,'',location.pathname+location.search);});
+  dialog.querySelector('.legal-close').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('close',()=>{
+    if(location.hash==='#privacy')history.replaceState(null,'',location.pathname+location.search);
   });
   addEventListener('hashchange',sync);sync();
-  if(choice==='yes')start(); else if(choice===null)panel.hidden=false;
 })();
-</script></body>
+</script>
+</body>
 </html>
