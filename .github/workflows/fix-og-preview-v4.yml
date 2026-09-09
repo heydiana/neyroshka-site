@@ -42,18 +42,14 @@ jobs:
           if not m:
               raise SystemExit(f'Bad trim geometry: {sys.argv[3]}')
           w, h, x, y = map(int, m.groups())
-
-          # Keep a visible safe margin around the actual page content.
           pad_x, pad_y = 44, 28
           left = max(0, x - pad_x)
           top = max(0, y - pad_y)
           right = min(sw, x + w + pad_x)
           bottom = min(sh, y + h + pad_y)
-
           target = 1200 / 630
           cw, ch = right - left, bottom - top
           current = cw / ch
-
           if current < target:
               need_w = min(sw, round(ch * target))
               extra = need_w - cw
@@ -64,7 +60,6 @@ jobs:
               extra = need_h - ch
               top -= extra // 2
               bottom += extra - extra // 2
-
           if left < 0:
               right = min(sw, right - left)
               left = 0
@@ -77,7 +72,6 @@ jobs:
           if bottom > sh:
               top = max(0, top - (bottom - sh))
               bottom = sh
-
           cw, ch = right - left, bottom - top
           print(f'{cw}x{ch}+{left}+{top}')
           PY
@@ -104,3 +98,5 @@ jobs:
           git add index.html images/neyroshka-header-preview-v4.jpg
           git commit -m "Fix OG preview safe crop" || exit 0
           git push
+
+# trigger
