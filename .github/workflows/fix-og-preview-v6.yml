@@ -14,16 +14,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+
       - name: Build preview without cropping
         shell: bash
         run: |
           set -euo pipefail
           SRC="images/neyroshka-header-preview-v2.jpg"
           OUT="images/neyroshka-header-preview-v6.jpg"
-          IM="convert"
-          if command -v magick >/dev/null 2>&1; then IM="magick"; fi
-          $IM "$SRC" -resize '1200x630!' -quality 94 "$OUT"
-          echo "OUTPUT=$($IM identify -format '%wx%h' "$OUT" 2>/dev/null || identify -format '%wx%h' "$OUT")"
+          convert "$SRC" -resize '1200x630!' -quality 94 "$OUT"
+          echo "OUTPUT=$(identify -format '%wx%h' "$OUT")"
 
       - name: Point metadata to v6
         run: |
