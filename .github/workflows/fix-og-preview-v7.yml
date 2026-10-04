@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Pillow
+        run: python -m pip install pillow
+
       - name: Build cropped OG preview
         shell: bash
         run: |
