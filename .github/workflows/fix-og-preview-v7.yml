@@ -1,0 +1,88 @@
+name: Fix OG preview v7
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-og-preview-v7.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build cropped OG preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+
+          src = Path('images/neyroshka-header-preview-v6.jpg')
+          out = Path('images/neyroshka-header-preview-v7.jpg')
+
+          im = Image.open(src).convert('RGB')
+          w, h = im.size
+          px = im.load()
+
+          # Detect only a trailing near-black full-width block at the bottom.
+          cutoff = h
+          min_dark_share = 0.94
+          dark_limit = 28
+          for y in range(h - 1, -1, -1):
+              dark = 0
+              for x in range(w):
+                  r, g, b = px[x, y]
+                  if max(r, g, b) <= dark_limit:
+                      dark += 1
+              if dark / w >= min_dark_share:
+                  cutoff = y
+              else:
+                  break
+
+          # Keep a safety margin so the hero itself is never clipped.
+          if cutoff < h:
+              cutoff = min(h, cutoff + 8)
+          else:
+              cutoff = h
+
+          im = im.crop((0, 0, w, cutoff))
+
+          # Fill 1200x630 without stretching; crop only overflow.
+          target = (1200, 630)
+          scale = max(target[0] / im.width, target[1] / im.height)
+          nw = max(target[0], round(im.width * scale))
+          nh = max(target[1], round(im.height * scale))
+          im = im.resize((nw, nh), Image.Resampling.LANCZOS)
+
+          left = 0
+          top = max(0, (nh - target[1]) // 2)
+          if nw > target[0]:
+              # Anchor left because the headline and main hero composition are on the left/center.
+              left = 0
+          im = im.crop((left, top, left + target[0], top + target[1]))
+          im.save(out, 'JPEG', quality=94, optimize=True)
+          print(f'SOURCE={w}x{h} CUTOFF={cutoff} OUTPUT={im.size[0]}x{im.size[1]}')
+          PY
+
+      - name: Point metadata to v7
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('images/neyroshka-header-preview-v6.jpg', 'images/neyroshka-header-preview-v7.jpg')
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit corrected preview
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html images/neyroshka-header-preview-v7.jpg
+          git commit -m "Fix OG preview crop v7" || exit 0
+          git push
